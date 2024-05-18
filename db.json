@@ -1,0 +1,21 @@
+{
+    "users": [
+    {   
+        "id": 0, 
+        "name": "Bilal", 
+        "surname": "Orhanlar",
+        "email": "bilal.orhnlr14@gmail.com", 
+        "password": "bilal123",
+        "github": "bilalorhanlr"
+    },
+    {   
+        "id": 1, 
+        "name": "Samet", 
+        "surname": "yıldırım",
+        "email": "yildirimsamet@gmail.com", 
+        "password": "samet123",
+        "github": "syildiri" 
+    }
+    ]
+  }
+  

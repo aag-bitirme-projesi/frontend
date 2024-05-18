@@ -1,0 +1,35 @@
+
+my-app/
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/
+│   │   ├── logo/
+│   │   │   └── beyazlogo.png
+│   │   ├── icons/
+│   │   ├── pics/
+│   │   │   └── asd.png
+│   ├── components/
+│   │   ├── header/
+│   │   │   └── Header.js
+│   │   ├── navbar/
+│   │   │   └── Navbar.js
+│   │   ├── footer/
+│   │   │   └── Footer.js
+│   │   ├── modals/
+│   │   │   └── Modal1.js
+│   ├── pages/
+│   │   ├── home/
+│   │   │   └── Home.js
+│   │   ├── about/
+│   │   │   └── about.js 
+│   │   ├── login/
+│   │   │   └── Login.js
+│   │   ├── dashboard/
+│   │   │   └── Dashboard.js
+│   ├── App.js
+│   ├── App.css
+│   ├── index.js
+│   └── index.css
+├── package.json
+└── README.md
