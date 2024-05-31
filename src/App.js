@@ -21,6 +21,7 @@ import LandingPage from './pages/landingPage/LandingPage';
 import FAQ from './pages/faq/FAQ';
 import ContactEntry from './pages/contactUsEntryPage/ContactUsEntryPage';
 import ChangePassword from './pages/changePassword/ChangePassword';
+import RunSection from './pages/runSection/RunSection';
 import './App.css';
 
 const App = () => {
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/FAQ" element={<FAQ />} />
             <Route path="/contactUs" element={<ContactEntry />} />
             <Route path="/changePassword" element={<ChangePassword />} />
+            <Route path="/runSection" element={<RunSection />} />
           </Routes>
         </main>
       </div>

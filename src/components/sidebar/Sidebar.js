@@ -58,7 +58,7 @@ const Sidebar = () => {
                         {item.name}
                     </li>
                 ))}
-                <div className="mt-40">
+                <div className="mt-28">
                     {bottomMenuItems.map((item, index) => (
                         <li
                             key={index}
