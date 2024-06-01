@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import authService from '../../services/AuthService';
 
 const Sidebar = () => {
     const [activeItem, setActiveItem] = useState('/');
@@ -14,14 +13,13 @@ const Sidebar = () => {
         { name: 'Run', path: '/run' },
         { name: 'Models', path: '/models' },
         { name: 'Datasets', path: '/datasets' },
-        { name: 'Pay', path: '/card' },
-        { name: 'Wallet', path: '/wallet' }
+        { name: 'Card', path: '/pay' },
     ];
 
     const bottomMenuItems = [
         { name: 'Profile', path: '/profile' },
         { name: 'Contact Us', path: '/contact' },
-        { name: 'Sign Out', path: '/' }
+        { name: 'Sign OUT', path: '/' }
     ];
 
     useEffect(() => {
@@ -29,35 +27,19 @@ const Sidebar = () => {
     }, [location.pathname]);
 
     const handleItemClick = (path) => {
-        if (path === '/') {   
-            console.log("Signing out..."); 
+        if (path === '/asd') {   
+        console.log("Signing out..."); 
             // authService.signOut() vb.
-            //TODO burası mı sadece?
-            authService.logout();
         } else {
             setActiveItem(path); 
             navigate(path);
         }
     };
 
-    const shouldHideNavbar = (pathname) => {
-        // Check if pathname matches any hidden paths exactly
-        if (hiddenPaths.includes(pathname)) {
-          return true;
-        }
-        
-        // Check if pathname starts with '/resetPassword/' (dynamic path)
-        if (pathname.startsWith('/resetPassword')) {
-          return true;
-        }
-      
-        return false;
-    };
 
-    if (shouldHideNavbar(location.pathname)) {
+    if (hiddenPaths.includes(location.pathname)) {
         return null;
     }
-
     const handleLandingPage = () => {
         navigate(`/landingPage`);
       };
@@ -75,7 +57,7 @@ const Sidebar = () => {
                         {item.name}
                     </li>
                 ))}
-                <div className="mt-40">
+                <div className="mt-28">
                     {bottomMenuItems.map((item, index) => (
                         <li
                             key={index}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Profilphoto from '../../assets/pics/profilphoto.png';
 import userService from '../../services/UserService';
@@ -16,7 +16,8 @@ const Profile = () => {
         //profilPhoto: ''
     });
     const [cvFile, setCvFile] = useState(null);
-    const [profilePhotoFile, setProfilePhotoFile] = useState(null);
+    const [profilePhotoFile, setProfilePhotoFile] = useState(Profilphoto);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,14 +46,29 @@ const Profile = () => {
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
+    // const handleFileChange = (event) => {
+    //   console.log();
+    //   const { name, files } = event.target;
+    //   if (name === 'cv') {
+    //     setCvFile(files[0]); }
+    //   // } else if (name === 'profilePhoto') {
+    //   //   setProfilePhotoFile(files[0]);
+    //   // }
+    // };
+
+    const handleProfileImageClick = () => {
+        fileInputRef.current.click();
+    };
+
     const handleFileChange = (event) => {
-      console.log();
-      const { name, files } = event.target;
-      if (name === 'cv') {
-        setCvFile(files[0]); }
-      // } else if (name === 'profilePhoto') {
-      //   setProfilePhotoFile(files[0]);
-      // }
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProfilePhotoFile(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const prepareUpdatePayload = () => {
@@ -96,7 +112,8 @@ const Profile = () => {
         <div className="bg-white shadow-md rounded-3xl ml-profile pl-8 pr-8 p-6 w-8/12 mt-48">
           <div className="flex items-center">
             <div className="w-1/3 pr-2">
-              <img src={Profilphoto} alt="Profil" className="rounded-lg" />
+              <img src={Profilphoto} alt="Profil" className="rounded-lg" onClick={handleProfileImageClick}/>
+              <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
             </div>
             <div className='w-2/3 pl-6'>
               <div className='mb-6 font-black text-2xl border-b-2 '>

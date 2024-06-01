@@ -6,7 +6,7 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const [selectedModelIds, setSelectedModelIds] = useState([]);
+  const [selectedModelIds, setSelectedModelIds] = useState([]);  
   const [selectedUploadIds, setSelectedUploadIds] = useState([]);
   const [selectedDataIds, setSelectedDataIds] = useState([]);
 
@@ -88,20 +88,39 @@ const Dashboard = () => {
 
   //TODO burada kaldın
   const handleDeleteUploads = () => {
-    console.log('Deleting model IDs:', selectedUploadIds); 
+    console.log('Deleting model IDs:', selectedUploadIds);
+    
+    const fetchData = async() => {
+      try {
+        const response = await modelService.deleteMyModels(selectedUploadIds);
+        console.log(response);
+      } catch (error) {
+          console.log(error);
+          throw error;
+      }
+    };
+
+    fetchData();
+
     setUpload(currentUploads => currentUploads.filter(model => !selectedUploadIds.includes(model.id)));
     setSelectedUploadIds([]); 
-  };
-  
-  const handleDeleteModel = () => {
-    console.log('Deleting model IDs:', selectedModelIds);
-    const updatedModels = models.filter(model => !selectedModelIds.includes(model.id));
-    setModels(updatedModels);
-    setSelectedModelIds([]);
   };
 
   const handleDeleteData = () => {
     console.log('Deleting data IDs:', selectedDataIds);
+
+    const fetchData = async() => {
+      try {
+        const response = await modelService.deleteDatasets(selectedDataIds);
+        console.log(response);
+      } catch (error) {
+          console.log(error);
+          throw error;
+      }
+    };
+
+    fetchData();
+
     const updatedData = data.filter(dataset => !selectedDataIds.includes(dataset.id));
     setData(updatedData);
     setSelectedDataIds([]); 
@@ -158,9 +177,6 @@ const Dashboard = () => {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-white font-black text-2xl">Bought Models</h1>
                 <div className="flex">
-                    <button onClick={handleDeleteModel} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-10 mr-6 rounded-lg">
-                    Delete
-                    </button>
                     <button onClick={handleBuyModel} className="bg-white hover:bg-gray-100 font-bold py-2 px-6 rounded-lg">
                     <p className='bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-green-500'>Buy Module</p>
                     </button>
@@ -284,12 +300,6 @@ const Dashboard = () => {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-white font-black text-2xl">Uploaded Models</h1>
                 <div className="flex">
-                    <button onClick={() => setAvailabilityForSelected(true)} className="bg-white hover:bg-gray-200 text-black font-bold py-2 px-6 mr-6 rounded-lg">
-                        Available
-                    </button>
-                    <button onClick={() => setAvailabilityForSelected(false)} className="bg-black hover:bg-gray-900 text-white font-bold py-2 px-5 mr-6 rounded-lg">
-                        Unavailable
-                    </button>
                     <button onClick={handleDeleteUploads} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-10 mr-6 rounded-lg">
                         Delete
                     </button>
