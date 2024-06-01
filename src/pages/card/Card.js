@@ -1,32 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const Card = () => {
-  const [orderItems, setOrderItems] = useState([
-    { id: 1, name: 'Data Module', price: 2.00, quantity: 1 },
-    { id: 2, name: 'Color Module', price: 5.00, quantity: 1 }
-  ]);
+  // const [orderItems, setOrderItems] = useState([
+  //   { id: 1, name: 'Data Module', price: 2.00},
+  //   { id: 2, name: 'Color Module', price: 5.00}
+  // ]);
+
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: '',
-    cardHolder: 'Gamze Ergün',
+    cardHolder: '',
     cvv: '',
     expiry: ''
   });
+
+  const [orderItems, setOrderItems] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null); 
   const modalRef = useRef(null);
-
-  const handleQuantityChange = (id, change) => {
-    setOrderItems(orderItems.map(item => {
-      if (item.id === id) {
-        const newQuantity = item.quantity + change;
-        return {
-          ...item,
-          quantity: newQuantity < 1 ? 1 : newQuantity > 10 ? 10 : newQuantity
-        };
-      }
-      return item;
-    }));
-  };
 
   const handleDelete = (id) => {
     setOrderItems(orderItems.filter(item => item.id !== id));
@@ -86,8 +77,7 @@ const Card = () => {
     );
   }
 
-  const total = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-
+  const total = orderItems.reduce((acc, item) => acc + (item.price), 0);
 
   return (
     <div className='w-9/12 mt-32 ml-dashboard-table'>
@@ -100,11 +90,6 @@ const Card = () => {
                 <img src={`/${item.name.toLowerCase().replace(' ', '-')}.png`} alt={item.name} className="h-20 w-20 mr-4"/>
                 <div>
                   <p>{item.name}</p>
-                  <div className="flex items-center">
-                    <button onClick={() => handleQuantityChange(item.id, -1)}>-</button>
-                    <span className="mx-2">{item.quantity}</span>
-                    <button onClick={() => handleQuantityChange(item.id, 1)}>+</button>
-                  </div>
                 </div>
               </div>
               <div className='text-center'>

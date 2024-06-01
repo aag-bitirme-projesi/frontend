@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import userService from '../../services/UserService';
 
 import illustration from '../../assets/pics/illustration.png';
 import renklilogouzun from '../../assets/logo/renklilogouzun.png';
@@ -21,8 +22,7 @@ const ForgotPassword = () => {
     event.preventDefault();
     try {
       // Send a request to the server to reset the password
-      const response = await axios.post('http://localhost:3001/resetpassword', { email });
-      console.log('Password reset email sent:', response.data);
+      const response = await userService.forgot_password(email);
       alert('Password reset email sent. Please check your inbox.');
       navigate('/');
     } catch (error) {

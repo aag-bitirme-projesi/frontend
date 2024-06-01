@@ -9,7 +9,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmpassword, setConfirmPassword] = useState('');
@@ -32,7 +32,7 @@ const Signup = () => {
   
     const userInfo = {
       name,
-      surname,
+      username,
       email,
       password,
       github: github.trim() !== "" ? github : undefined
@@ -41,13 +41,13 @@ const Signup = () => {
     try {
       await AuthService.signup(userInfo);
       console.log('Signup successful');
-      navigate('/signin');
+      navigate('/landingPage');
     } catch (error) {
       console.error('Signup failed:', error.response ? error.response.data : 'No response');
       alert('Signup failed: ' + (error.response ? error.response.data.message : 'No response'));
     }
   };
-
+  console.log("HERE3333");
   return (
     <div className="h-screen flex" style={{background: 'linear-gradient(to top, #071120, #032346)' }}>
       <div className="w-1/2 bg-cover bg-center bg-no-repeat mt-6" style={{ backgroundImage: `url(${illustration})`, backgroundSize: '69% 75%', backgroundPosition: 'center' }}></div>
@@ -74,13 +74,13 @@ const Signup = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="surname" className="block text-md mb-2 font-semibold text-white">Surname</label>
+              <label htmlFor="username" className="block text-md mb-2 font-semibold text-white">Username</label>
               <input
-                type="surname"
-                id="surname"
+                type="username"
+                id="username"
                 className="w-full border-2 border-white text-white rounded-full bg-transparent px-3 py-1.5"
-                value={surname}
-                onChange={(e) => setSurname(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
@@ -118,14 +118,13 @@ const Signup = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="github" className="block text-md mb-2 font-semibold text-white">Github *</label>
+              <label htmlFor="github" className="block text-md mb-2 font-semibold text-white">Github</label>
               <input
                 type="text"
                 id="github"
                 className="w-full border-2 border-white text-white rounded-full bg-transparent px-3 py-1.5"
                 value={github}
                 onChange={(e) => setGithub(e.target.value)}
-                required
               />
             </div>
             <p onClick = {handleForgotPasswordClick}className='text-xs mb-3 text-end font-light text-gray-400'>

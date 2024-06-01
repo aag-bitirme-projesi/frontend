@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import modelService from '../../services/ModelService';
 
 const Dashboard = () => {
 
@@ -8,9 +9,12 @@ const Dashboard = () => {
   const [selectedModelIds, setSelectedModelIds] = useState([]);
   const [selectedUploadIds, setSelectedUploadIds] = useState([]);
   const [selectedDataIds, setSelectedDataIds] = useState([]);
-  
 
-  const [models, setModels] = useState([
+  const [models, setModels] = useState([]);
+  const [upload, setUpload] = useState([]);
+  const [data, setData] = useState([]);
+
+  /*const [models, setModels] = useState([
     { id: 1, name: 'data analysis module', description: 'processes and graphs data', date: '01.12.2023', price: '6 $' },
     { id: 2, name: 'historical reporting module', description: 'You can upload x csvs to this data. It gives you x outputs. These outputs will be very useful to you.', date: '11.02.2024', price: '18 $' },
     { id: 3, name: 'classification module', description: 'It helps to classify the csvs you upload.', date: '13.02.2024', price: '30 $' },
@@ -33,8 +37,23 @@ const Dashboard = () => {
     { id: 4, name: 'coloring module', date: '28.05.2024' },
     { id: 5, name: 'data analysis module', date: '01.12.2023' },
     { id: 6, name: 'historical reporting module', date: '11.02.2024' }
-  ]);
+  ]); */
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await modelService.boughtModels(setModels);
+        await modelService.myModels(setUpload);
+        await modelService.myDatasets(setData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // bought models için
   const handleCheckboxChange = (modelId) => {
     setSelectedModelIds(prevIds => {
       if (prevIds.includes(modelId)) {
@@ -45,6 +64,7 @@ const Dashboard = () => {
     });
   };
 
+  // benim yüklediklerim için
   const handleUploadCheckboxChange = (modelId) => {
     setSelectedUploadIds(prev => {
       if (prev.includes(modelId)) {
@@ -55,7 +75,7 @@ const Dashboard = () => {
     });
   };
   
-
+  // benim datasetlerim
   const handleDataCheckboxChange = (dataId) => {
     setSelectedDataIds(prevIds => {
       if (prevIds.includes(dataId)) {
@@ -66,15 +86,13 @@ const Dashboard = () => {
     });
   };
 
+  //TODO burada kaldın
   const handleDeleteUploads = () => {
     console.log('Deleting model IDs:', selectedUploadIds); 
     setUpload(currentUploads => currentUploads.filter(model => !selectedUploadIds.includes(model.id)));
     setSelectedUploadIds([]); 
   };
   
-  
-  
-
   const handleDeleteModel = () => {
     console.log('Deleting model IDs:', selectedModelIds);
     const updatedModels = models.filter(model => !selectedModelIds.includes(model.id));

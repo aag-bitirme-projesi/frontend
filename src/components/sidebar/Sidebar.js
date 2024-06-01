@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import authService from '../../services/AuthService';
 
 const Sidebar = () => {
     const [activeItem, setActiveItem] = useState('/');
     const navigate = useNavigate();
     const location = useLocation();
 
-    const hiddenPaths = ['/signin', '/signup', '/', '/hiddenpage', '/forgotPassword', '/FAQ'];
+    const hiddenPaths = ['/signin', '/signup', '/', '/hiddenpage', '/forgotPassword', '/FAQ', 'resetPassword'];
 
     const menuItems = [
         { name: 'Dashboard', path: '/dashboard' },
         { name: 'Run', path: '/run' },
         { name: 'Models', path: '/models' },
         { name: 'Datasets', path: '/datasets' },
-        { name: 'Card', path: '/card' },
+        { name: 'Pay', path: '/card' },
         { name: 'Wallet', path: '/wallet' }
     ];
 
     const bottomMenuItems = [
         { name: 'Profile', path: '/profile' },
         { name: 'Contact Us', path: '/contact' },
-        { name: 'Sign OUT', path: '/asd' }
+        { name: 'Sign Out', path: '/' }
     ];
 
     useEffect(() => {
@@ -28,22 +29,42 @@ const Sidebar = () => {
     }, [location.pathname]);
 
     const handleItemClick = (path) => {
-        if (path === '/asd') {   
-        console.log("Signing out..."); 
+        if (path === '/') {   
+            console.log("Signing out..."); 
             // authService.signOut() vb.
+            //TODO burası mı sadece?
+            authService.logout();
         } else {
             setActiveItem(path); 
             navigate(path);
         }
     };
 
-    if (hiddenPaths.includes(location.pathname)) {
+    const shouldHideNavbar = (pathname) => {
+        // Check if pathname matches any hidden paths exactly
+        if (hiddenPaths.includes(pathname)) {
+          return true;
+        }
+        
+        // Check if pathname starts with '/resetPassword/' (dynamic path)
+        if (pathname.startsWith('/resetPassword')) {
+          return true;
+        }
+      
+        return false;
+    };
+
+    if (shouldHideNavbar(location.pathname)) {
         return null;
     }
 
+    const handleLandingPage = () => {
+        navigate(`/landingPage`);
+      };
+
     return (
         <div className="fixed top-0 left-0 z-50 h-full text-center bg-bg-mavi text-white w-80 border-r-4 border-border-mavi">
-            <div className="pt-10 pb-16 px-3 text-4xl font-black">EVERMORE</div>
+            <button onClick = {handleLandingPage}className="pt-10 pb-16 px-3 text-4xl font-black">EVERMORE</button>
             <ul className="flex flex-col p-2">
                 {menuItems.map((item, index) => (
                     <li

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';  // Axios import edilir
+import authService from '../../services/AuthService';
 
 import illustration from '../../assets/pics/illustration.png';
 import renklilogouzun from '../../assets/logo/renklilogouzun.png';
@@ -10,12 +11,18 @@ const Signin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const userInfo = {
+    email,
+    password
+  };
+
   const handleSignupClick = () => {
     navigate('/signup');
   };
   const handleForgotPasswordClick = () => {
     navigate('/forgotPassword');
   };
+
   const handleHomeClick = () => {
     navigate('/');
   };
@@ -23,17 +30,10 @@ const Signin = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      axios.get(`http://localhost:3001/users?email=${email}&password=${password}`)
-      .then(response => {
-        if (response.data.length > 0) {
-          console.log('Login successful:', response.data[0]);
-          navigate('/dashboard');
-        } else {
-          // hata mesajı göster
-          console.error('No user found with the given credentials');
-          alert('No user found with the given credentials');
-        }
-      });
+      const response = await authService.signin(userInfo);
+      console.log("hellour");
+      console.log(response);
+      navigate('/landingPage')
     } catch (error) {
       console.error('Login failed:', error.response ? error.response.data : 'No response');
       alert('Login failed: ' + (error.response ? error.response.data.message : 'No response'));

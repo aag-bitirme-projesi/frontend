@@ -1,33 +1,48 @@
 import axios from 'axios';
 
-const API_URL = 'api isteği yolu'; // Api url
+const API_URL = 'http://localhost:8080/user/auth'; // Api url
 
-const signin = async (email, password) => {
+const signin = async (userData) => {
   try {
-    const response = await axios.post(API_URL + '/signin', {
-      email,
-      password
+    const response = await axios.post(`${API_URL}/signin`, userData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
-    if (response.data.accessToken) {
-      localStorage.setItem('user', JSON.stringify(response.data));
+    
+    if (response.data.token) {
+      localStorage.setItem('jwtToken', response.data.token);
     }
+
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-
-const API_BASE_URL = 'api yolu girilecek'; // API url
-
 const signup = async (userData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/signup`, userData);
+    const response = await axios.post(`${API_URL}/signup`, userData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.data.token) {
+      localStorage.setItem('jwtToken', response.data.token);
+    }
+
+    console.log('Signup successful:', response.data);
     return response.data; 
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
 
-const authService = { signin, signup };
+const logout = () => {
+  localStorage.removeItem('jwtToken');
+};
+
+const authService = { signin, signup, logout };
 export default authService;

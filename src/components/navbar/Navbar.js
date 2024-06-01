@@ -12,10 +12,17 @@ function Navbar() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await axios.get('api/adresini/yazarsın');
+                const token = localStorage.getItem('jwtToken');
+                const response = await axios.get('http://localhost:8080/user/user/profile', {
+                    headers: {
+                      'Authorization': `Bearer ${token}`,
+                      'Content-Type': 'application/json'
+                    },
+                  });
+
                 setProfile({ 
                     name: response.data.name, 
-                    imageUrl: response.data.imageUrl 
+                    imageUrl: response.data.profilePhoto 
                 });
             } catch (error) {
                 console.error('Profil bilgileri alınırken hata oluştu', error);
@@ -39,9 +46,23 @@ function Navbar() {
         navigate('/contact'); 
     };
 
-    const hiddenPaths = ['/signin', '/signup', '/', '/hiddenpage', '/forgotPassword'];
+    const hiddenPaths = ['/signin', '/signup', '/', '/hiddenpage', '/forgotPassword', 'resetPassword'];
 
-    if (hiddenPaths.includes(location.pathname)) {
+    const shouldHideNavbar = (pathname) => {
+        // Check if pathname matches any hidden paths exactly
+        if (hiddenPaths.includes(pathname)) {
+          return true;
+        }
+        
+        // Check if pathname starts with '/resetPassword/' (dynamic path)
+        if (pathname.startsWith('/resetPassword/')) {
+          return true;
+        }
+      
+        return false;
+    };
+
+    if (shouldHideNavbar(location.pathname)) {
         return null;
     }
 

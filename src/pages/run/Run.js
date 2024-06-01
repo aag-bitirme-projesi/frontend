@@ -118,15 +118,10 @@ const Run = () => {
                 </div>
             </div>
             <div className="mt-4">
-                <h2 className="text-2xl font-bold">Cost</h2>
                 <div className="flex justify-between items-center">
                 <p className='font-normal text-xl mt-4'>{selectedDataset} / {selectedModel}</p>
-                <p className=" font-semibold text-2xl">Total Price: $4.00</p>
                 </div>
                 <div className="flex mt-4 justify-end ">
-                    <button onClick={handlePay} className="bg-ebebeb shadow-xl text-black font-bold py-2 px-20 rounded-xl">
-                        Pay
-                    </button>
                     <button onClick={handleRun} className="bg-gradient-to-r from-green-500 to-purple-500 shadow-xl text-white font-bold ml-6 py-2 px-20 rounded-xl">
                         Run
                     </button>
