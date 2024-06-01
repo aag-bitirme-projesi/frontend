@@ -35,13 +35,8 @@ const boughtModels = async(setModels) => {
             });
 
         const modelData = response.data;
-        setModels({
-            id: modelData.id || '',
-            name: modelData.name || '',
-            description: modelData.description || '',
-            date: modelData.createdAt || '',
-            price: modelData.price || 0
-        });
+        console.log("bought: ", modelData);
+        setModels(modelData);
     } catch (error) {
         console.log(error);
         throw error;
@@ -50,23 +45,18 @@ const boughtModels = async(setModels) => {
 
 const myModels = async(setUpload) => {
     try {
+        console.log("h1");
         const token = localStorage.getItem('jwtToken');
         const response = await axios.get(`${API_URL}/my-models`,  {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
-            });
+        });
 
         const modelData = response.data;
-        setUpload({
-            id: modelData.id || '',
-            name: modelData.name || '',
-            description: modelData.description || '',
-            availability: modelData.availability || '',
-            date: modelData.createdAt || '',
-            price: modelData.price || ''
-        });
+        console.log("my models: ", modelData);
+        setUpload(modelData);
     } catch (error) {
         console.log(error);
         throw error;
@@ -76,18 +66,19 @@ const myModels = async(setUpload) => {
 const myDatasets = async(setData) => {
     try {
         const token = localStorage.getItem('jwtToken');
-        const response = await axios.get(`${MODEL_API_URL}/my-datasets`,  {
+        const response = await axios.get(`${MODEL_API_URL}/my-datasets`,   {
             headers: {
                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
                 'Content-Type': 'application/json'
+            },
+            params: {
+                username: getUsernameFromToken(token)
             }
-            });
+        });
 
         const modelData = response.data;
-        setData({
-            name: modelData.name || '',
-            date: modelData.createdAt || ''
-        });
+        console.log("datasets: ", modelData);
+        setData(modelData);
     } catch (error) {
         console.log(error);
         throw error;
@@ -162,16 +153,11 @@ const allModels = async(setProducts) => {
 
 const uploadModel = async(payload) => {
     try {
-        console.log(payload);
-        console.log("heyyy6");
-        console.log(payload.get('name'));
-        console.log(payload.get('username'));
-        console.log(payload.get('files'));
         const token = localStorage.getItem('jwtToken');
         const response = await axios.post(`${MODEL_API_URL}/upload-model`, payload, {
             headers: {
                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
                 'Access-Control-Allow-Origin' : '*'
             }
             });
@@ -183,6 +169,25 @@ const uploadModel = async(payload) => {
         throw error;
     } 
 };
+
+// const modelPhoto = async() => {
+//     try {
+//         const token = localStorage.getItem('jwtToken');
+//         const response = await axios.post(`${MODEL_API_URL}/get-image`, payload, {
+//             headers: {
+//                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+//                 'Content-Type': 'multipart/form-data',
+//                 'Access-Control-Allow-Origin' : '*'
+//             }
+//             });
+        
+//         console.log(response);
+//         return response;
+//     } catch (error) {
+//         console.log(error);
+//         throw error;
+//     } 
+// };
 
 const modelService = { decodeToken, getUsernameFromToken, boughtModels, myModels, myDatasets, 
     deleteDatasets, deleteMyModels, allModels, uploadModel };

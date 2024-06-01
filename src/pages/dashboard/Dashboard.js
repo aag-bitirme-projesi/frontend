@@ -42,9 +42,12 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await modelService.boughtModels(setModels);
-        await modelService.myModels(setUpload);
-        await modelService.myDatasets(setData);
+        const response1 = await modelService.boughtModels(setModels);
+        console.log("final models: ", models);
+        const response2 = await modelService.myModels(setUpload);
+        const response3 = await modelService.myDatasets(setData);
+
+        console.log("final models: ", models);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -333,7 +336,7 @@ const Dashboard = () => {
                     <td className="px-6 py-2 w-128 text-sm text-white">
                       <div className="overflow-y-auto" style={{ maxHeight: '40px' }}>{model.description}</div>
                     </td>
-                    <td className="px-6 py-2 whitespace-nowrap font-thin text-sm text-white">{model.date}</td>
+                    <td className="px-6 py-2 whitespace-nowrap font-thin text-sm text-white">{model.createdAt}</td>
                     <td className="px-6 py-2 whitespace-nowrap font-semibold text-sm text-white">
                       <button onClick={() => toggleAvailability(model.id)} className="p-3">
                         {modelAvailability[model.id] ? (

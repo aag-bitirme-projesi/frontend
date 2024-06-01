@@ -37,10 +37,6 @@ const Model = () => {
         for (let i = 0; i < files.length; i++) {
           payload.append('files', files[i]);
         }
-
-        for (let pair of payload.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
     
         try {
           const response = await modelService.uploadModel(payload);
@@ -50,7 +46,7 @@ const Model = () => {
         }
       };
 
-    useEffect(() => {
+    useEffect(() => {  //TODO modellerin fotolarının da çekilmesi lazım
         const fetchData = async () => {
             try {
                 await modelService.allModels(setProducts);
@@ -94,7 +90,7 @@ const Model = () => {
                     <div className="w-1/3 items-center mt-4">
                         <div className="w-full mt-8">
                             <label className="block text-black text-lg font-bold mb-2" htmlFor="name">Project Name</label>
-                            <input name="name" className="shadow-lg appearance-none border rounded-xl w-full py-2 px-3 text-afafaf leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Enter Project Name . . ." name="name" value={newModel.name} onChange={handleChange}/>
+                            <input name="name" className="shadow-lg appearance-none border rounded-xl w-full py-2 px-3 text-afafaf leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Enter Project Name . . ." value={newModel.name} onChange={handleChange}/>
                         </div>
                         <div className="w-full mt-6 flex items-center">
                             <span className="block text-black text-lg font-bold">Price:</span>
