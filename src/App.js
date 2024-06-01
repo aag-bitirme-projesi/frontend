@@ -44,7 +44,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />   {/* baktım */}  {/* TODO updatede ataberkin yaptığına geri çevir */}  
             <Route path="/contact" element={<Contact />} />
             <Route path="/output" element={<Output />} />    {/* TODO VIDEO */}  
-            <Route path="/card" element={<Card />} />   {/* TODO VIDEO */}
+            <Route path="/pay" element={<Card />} />   {/* TODO VIDEO */}
             <Route path="/forgotPassword" element={<ForgotPassword/>} /> {/* baktım */}
             <Route path="/resetPassword/:token" element={<ChangePassword/>} />  {/* baktım */}
             <Route path="/landingPage" element={<LandingPage />} />
