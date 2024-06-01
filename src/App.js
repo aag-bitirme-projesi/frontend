@@ -17,9 +17,11 @@ import Details from './pages/details/Details';
 import Output from './pages/output/Output';
 import Card from './pages/card/Card';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
-import ChangePassword from './pages/changePassword/ChangePassword';
 import LandingPage from './pages/landingPage/LandingPage';
 import FAQ from './pages/faq/FAQ';
+import ContactEntry from './pages/contactUsEntryPage/ContactUsEntryPage';
+import ChangePassword from './pages/changePassword/ChangePassword';
+import RunSection from './pages/runSection/RunSection';
 import './App.css';
 
 const App = () => {
@@ -34,22 +36,23 @@ const App = () => {
           <Routes> 
             <Route path="/signin" element={<Signin />} /> {/* baktım */}  {/* VIDEO */}
             <Route path="/signup" element={<Signup />} /> {/* baktım */}
-            <Route path="/" element={<Home />} />  {/* baktım */}
-            <Route path="/dashboard" element={<Dashboard />} />   {/* TODO VIDEO */}
-            <Route path="/run" element={<Run />} />   {/* TODO VIDEO */}
+            <Route path="/" element={<Home />} /> {/* baktım */}
+            <Route path="/dashboard" element={<Dashboard />} /> {/* TODO VIDEO */}
+            <Route path="/run" element={<Run />} />  {/* TODO VIDEO */}
             <Route path="/models" element={<Models />} />
-            <Route path="/datasets" element={<Datasets />} /> 
+            <Route path="/datasets" element={<Datasets />} />
             <Route path="/details/:id" element={<Details />} />
             {/* <Route path="/wallet" element={<Wallet />} /> */}
-            <Route path="/profile" element={<Profile />} />   {/* baktım */}  {/* TODO updatede ataberkin yaptığına geri çevir */}  
+            <Route path="/profile" element={<Profile />} />  {/* baktım */}  {/* TODO updatede ataberkin yaptığına geri çevir */}  
             <Route path="/contact" element={<Contact />} />
-            <Route path="/output" element={<Output />} />    {/* TODO VIDEO */}  
-            <Route path="/pay" element={<Card />} />   {/* TODO VIDEO */}
-            <Route path="/forgotPassword" element={<ForgotPassword/>} /> {/* baktım */}
-            <Route path="/resetPassword/:token" element={<ChangePassword/>} />  {/* baktım */}
+            <Route path="/output" element={<Output />} />   {/* TODO VIDEO */}  
+            <Route path="/pay" element={<Card />} />  {/* TODO VIDEO */}
+            <Route path="/forgotPassword" element={<ForgotPassword/>} />  {/* baktım */}
             <Route path="/landingPage" element={<LandingPage />} />
             <Route path="/FAQ" element={<FAQ />} />  {/* baktım */}
-
+            <Route path="/contactUs" element={<ContactEntry />} />
+            <Route path="//resetPassword/:token" element={<ChangePassword />} />  {/* baktım */}
+            <Route path="/runSection" element={<RunSection />} />
           </Routes>
         </main>
       </div>

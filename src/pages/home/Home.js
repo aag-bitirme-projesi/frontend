@@ -20,6 +20,10 @@ const Home = () => {
     navigate('/signin');
   };
 
+  const handleContactUs = () => {
+    navigate('/contactUs');
+  };
+
 
   return (
     <div>
@@ -30,7 +34,7 @@ const Home = () => {
             <p className="mb-10 w-9/12 font-semibold text-2xl text-blue-300 opacity-70">Do you want to find AI models for your business, or do you want to find a market for selling your AI models? Evermore is here for you.</p>
             <div className="flex justify-between items-center  rounded-lg w-9/12">
                 <input type="text" placeholder="Your Email Address" className="flex-grow pl-10 pr-4 pt-3 pb-3 h-full bg-blue-950  rounded-l-xl text-white focus:outline-none" />
-                <button onClick={handleSignin} className="bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-r-xl px-8 py-5 transition-colors duration-300">Contact Us</button>
+                <button onClick={handleContactUs} className="bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-r-xl px-8 py-5 transition-colors duration-300">Contact Us</button>
             </div>
           </div>
           <div className="flex-1 bg-cover bg-no-repeat mt-36" style={{ backgroundImage: `url(${illustration})`, backgroundSize: '70%' }}></div>
@@ -126,7 +130,7 @@ const Home = () => {
       <div className="w-3/12">
         <img alt="" className="p-12 -mx-20 h-auto" src={illustration}/>
       </div>
-      <button onClick={handleSignin} className="w-3/12 bg-gradient-to-r from-purple-500 to-green-500 text-white text-2xl font-bold text-center p-4 mr-8 rounded-2xl">
+      <button onClick={handleContactUs} className="w-3/12 bg-gradient-to-r from-purple-500 to-green-500 text-white text-2xl font-bold text-center p-4 mr-8 rounded-2xl">
           Contact Us
       </button>
     </div>

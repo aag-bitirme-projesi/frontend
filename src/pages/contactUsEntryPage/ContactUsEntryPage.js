@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
-
-const Contact = () => {
+import { useNavigate } from 'react-router-dom';
+const ContactEntryPage = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         surname: '',
@@ -14,6 +15,9 @@ const Contact = () => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
+    const handleHomeClick = () => {
+        navigate('/');
+      };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -40,7 +44,15 @@ const Contact = () => {
     };
 
     return (
-        <div className="bg-blue-950 p-8 w-6/12 mt-48 ml-contact rounded-3xl">
+        <div>
+ <div className="absolute z-20 top-0 left-0 m-4">
+        <button onClick={handleHomeClick} className=" rounded-full p-2 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" className="h-6 w-6 text-white">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+      </div>
+        <div className='w-9/12 mx-auto rounded-3xl mb-32 mt-48 p-24' style={{background: 'linear-gradient(to right, #001D3A, #064284)'}}>
             <h2 className="text-white font-black text-2xl mb-6 border-b-2 border-white">Contact Us</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex gap-4">
@@ -118,7 +130,11 @@ const Contact = () => {
                 </div>
             </form>
         </div>
+
+
+        </div>
+       
     );
 };
 
-export default Contact;
+export default ContactEntryPage;
