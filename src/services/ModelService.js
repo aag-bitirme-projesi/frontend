@@ -35,7 +35,7 @@ const boughtModels = async(setModels) => {
             });
 
         const modelData = response.data;
-        console.log("bought: ", modelData);
+        // console.log("bought: ", modelData);
         setModels(modelData);
     } catch (error) {
         console.log(error);
@@ -45,7 +45,6 @@ const boughtModels = async(setModels) => {
 
 const myModels = async(setUpload) => {
     try {
-        console.log("h1");
         const token = localStorage.getItem('jwtToken');
         const response = await axios.get(`${API_URL}/my-models`,  {
             headers: {
@@ -55,7 +54,7 @@ const myModels = async(setUpload) => {
         });
 
         const modelData = response.data;
-        console.log("my models: ", modelData);
+        // console.log("my models: ", modelData);
         setUpload(modelData);
     } catch (error) {
         console.log(error);
@@ -77,7 +76,6 @@ const myDatasets = async(setData) => {
         });
 
         const modelData = response.data;
-        console.log("datasets: ", modelData);
         setData(modelData);
     } catch (error) {
         console.log(error);
@@ -134,7 +132,7 @@ const allModels = async(setProducts) => {
             });
 
         const products = response.data;
-        console.log(response);
+        // console.log(response);
 
         setProducts(products.map(product => ({
             id: product.id || '',
@@ -170,25 +168,26 @@ const uploadModel = async(payload) => {
     } 
 };
 
-// const modelPhoto = async() => {
-//     try {
-//         const token = localStorage.getItem('jwtToken');
-//         const response = await axios.post(`${MODEL_API_URL}/get-image`, payload, {
-//             headers: {
-//                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
-//                 'Content-Type': 'multipart/form-data',
-//                 'Access-Control-Allow-Origin' : '*'
-//             }
-//             });
+const modelPhoto = async(modelInfo) => {
+    try {
+        const token = localStorage.getItem('jwtToken');
+        const params = new URLSearchParams(modelInfo).toString(); // Convert modelInfo to query string
+
+        const response = await axios.get(`${MODEL_API_URL}/get-image?${params}`, modelInfo, {
+            headers: {
+                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                'Content-Type': 'multipart/form-data'
+            }
+            });
         
-//         console.log(response);
-//         return response;
-//     } catch (error) {
-//         console.log(error);
-//         throw error;
-//     } 
-// };
+        console.log("from s3: ", response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    } 
+};
 
 const modelService = { decodeToken, getUsernameFromToken, boughtModels, myModels, myDatasets, 
-    deleteDatasets, deleteMyModels, allModels, uploadModel };
+    deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto };
 export default modelService;

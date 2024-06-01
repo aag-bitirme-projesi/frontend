@@ -43,11 +43,9 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response1 = await modelService.boughtModels(setModels);
-        console.log("final models: ", models);
         const response2 = await modelService.myModels(setUpload);
         const response3 = await modelService.myDatasets(setData);
 
-        console.log("final models: ", models);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -89,7 +87,6 @@ const Dashboard = () => {
     });
   };
 
-  //TODO burada kaldın
   const handleDeleteUploads = () => {
     console.log('Deleting model IDs:', selectedUploadIds);
     

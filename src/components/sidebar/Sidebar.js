@@ -13,7 +13,7 @@ const Sidebar = () => {
         { name: 'Run', path: '/run' },
         { name: 'Models', path: '/models' },
         { name: 'Datasets', path: '/datasets' },
-        { name: 'Card', path: '/pay' },
+        { name: 'Pay', path: '/pay' },
     ];
 
     const bottomMenuItems = [

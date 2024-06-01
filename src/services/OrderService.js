@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8080/user/order'; // Api url
 
-const shoppingCart = async() => {
+const shoppingCart = async(setOrderItems) => {
     try {
         const token = localStorage.getItem('jwtToken');
         const response = await axios.get(`${API_URL}/get-cart`, {
@@ -12,6 +12,10 @@ const shoppingCart = async() => {
           }
         });
 
+        // console.log("in shopping cart: ", response.data);
+        const orderData = response.data;
+        setOrderItems(orderData);
+
         return response;
     } catch (error) {
         console.log(error);
@@ -19,13 +23,55 @@ const shoppingCart = async() => {
     }
 };
 
-const getModelPhoto = async() => {
+const addToCart = async(modelId) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await axios.put(`${API_URL}/add-to-cart`, modelId, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
+      return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 };
 
-const pay = async() => {
+const removeFromCart = async(modelId) => {
+  try {
+    const token = localStorage.getItem('jwtToken');
+    const response = await axios.delete(`${API_URL}/remove-from-cart/${modelId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      } 
+    });
 
+    return response;
+  } catch (error) {
+      console.log(error);
+      throw error;
+  }
 };
 
-const orderService = { shoppingCart, getModelPhoto, pay };
+const pay = async(paymentDetails) => {
+  try {
+    const token = localStorage.getItem('jwtToken');
+    const response = await axios.post(`${API_URL}/pay`, paymentDetails, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error during payment:', error);
+    throw error;
+  }
+};
+
+const orderService = { shoppingCart, addToCart, removeFromCart, pay };
 export default orderService;

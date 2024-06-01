@@ -27,7 +27,7 @@ const Header = () => {
         }
     };
 
-    const hiddenPaths = ['/signin', '/signup', '/output', '/card', '/dashboard', '/contact', '/profile', '/wallet', '/run', '/models', '/datasets', '/hiddenpage', '/forgotPassword', '/landingPage', '/FAQ', '/contactUs', ,'/changePassword', '/runSection'];
+    const hiddenPaths = ['/signin', '/signup', '/output', '/pay', '/dashboard', '/contact', '/profile', '/wallet', '/run', '/models', '/datasets', '/hiddenpage', '/forgotPassword', '/landingPage', '/FAQ', '/contactUs', ,'/changePassword', '/runSection'];
 
     const isHidden = hiddenPaths.some(path => path === location.pathname) || /\/details\/[^/]+$/.test(location.pathname);
 
