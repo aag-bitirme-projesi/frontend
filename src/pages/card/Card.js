@@ -88,9 +88,10 @@ const Card = () => {
         const response = await orderService.shoppingCart(setOrderItems);
         const itemsWithImages = await Promise.all(
           response.data.map(async (item) => {
+            console.log("item: ", item.name)
             console.log("developer: ", item.name.split('\\')[0]);
-            console.log("model name: ", item.name);
-            const imageUrl = await fetchImage({ username: item.name.split('/')[0], name: item.name });
+            console.log("model name: ", item.name.split('\\')[1]);
+            const imageUrl = await fetchImage({ username: item.name.split('\\')[0], name: item.name.split('\\')[1] });
             return { ...item, imageUrl };
           })
         );

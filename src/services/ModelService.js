@@ -24,6 +24,15 @@ const getUsernameFromToken = () => {
     return decodedToken ? decodedToken.sub : null;
 };
 
+const getEmailFromToken = () => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        return null;
+    }
+    const decodedToken = decodeToken(token);
+    return decodedToken ? decodedToken.email : null;
+}
+
 const boughtModels = async(setModels) => {
     try {
         const token = localStorage.getItem('jwtToken');
@@ -62,8 +71,9 @@ const myModels = async(setUpload) => {
     } 
 };
 
-const myDatasets = async(setData) => {
+const myDatasets = async(username) => {
     try {
+        console.log("tryna get datasets: ");
         const token = localStorage.getItem('jwtToken');
         const response = await axios.get(`${MODEL_API_URL}/my-datasets`,   {
             headers: {
@@ -71,12 +81,30 @@ const myDatasets = async(setData) => {
                 'Content-Type': 'application/json'
             },
             params: {
-                username: getUsernameFromToken(token)
+                username: username
+            }
+        });
+        console.log("actual response: ", response);
+        console.log("got datasets: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    } 
+};
+
+const uploadDataset = async(datasetDto) => {   //TODO
+    try {
+        const token = localStorage.getItem('jwtToken');
+        const response = await axios.post(`${MODEL_API_URL}/upload-dataset`, datasetDto,  {
+            headers: {
+                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                'Content-Type': 'multipart/form-data'
             }
         });
 
-        const modelData = response.data;
-        setData(modelData);
+        console.log("Dataset uploaded: ", response.data);
+        return response.data;
     } catch (error) {
         console.log(error);
         throw error;
@@ -170,6 +198,8 @@ const uploadModel = async(payload) => {
 
 const modelPhoto = async(modelInfo) => {
     try {
+        console.log("foto username: ", modelInfo['username']);
+        console.log("foto name: ", modelInfo['name']);
         const token = localStorage.getItem('jwtToken');
         const params = new URLSearchParams(modelInfo).toString(); // Convert modelInfo to query string
 
@@ -189,5 +219,5 @@ const modelPhoto = async(modelInfo) => {
 };
 
 const modelService = { decodeToken, getUsernameFromToken, boughtModels, myModels, myDatasets, 
-    deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto };
+    deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto, uploadDataset };
 export default modelService;
