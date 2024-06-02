@@ -8,7 +8,7 @@ const Profile = () => {
     const navigate = useNavigate();
     const [initialProfile, setInitialProfile] = useState({});
     const [formData, setFormData] = useState({  
-        name: '',
+        name: 'Ayça Akyol',
         username: '',
         email: '',
         github: '',
@@ -24,7 +24,7 @@ const Profile = () => {
           try {
             const response = await userService.profile(setFormData);
             setInitialProfile({
-                name: response.data.name || '',
+                name: response.data.name || 'Ayça Akyol',
                 username: response.data.username || '',
                 email: response.data.email || '',
                 github: response.data.github || '',

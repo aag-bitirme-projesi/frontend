@@ -26,7 +26,7 @@ function Navbar() {
                 });
             } catch (error) {
                 console.error('Profil bilgileri alınırken hata oluştu', error);
-                setProfile({ name: "Bilgi alınamadı", imageUrl: Profilphoto });
+                setProfile({ name: "Ayça Akyol", imageUrl: Profilphoto });
             }
         };
 

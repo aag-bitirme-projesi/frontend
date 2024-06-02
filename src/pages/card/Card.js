@@ -139,7 +139,8 @@ const Card = () => {
               <div className="flex items-center">
                 <img src={item.imageUrl} alt={item.name} className="h-20 w-20 mr-4"/>
                 <div>
-                  <p>{item.name}</p>
+                  {/* <p>{item.name}</p> */}
+                  <p>animal-pred</p>
                 </div>
               </div>
               <div className='text-center'>
