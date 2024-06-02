@@ -6,7 +6,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const hiddenPaths = ['/signin', '/signup', '/', '/hiddenpage', '/forgotPassword', '/FAQ', 'resetPassword'];
+    const hiddenPaths = ['/signin', '/signup', '/', '/hiddenpage', '/forgotPassword', 'resetPassword'];
 
     const menuItems = [
         { name: 'Dashboard', path: '/dashboard' },

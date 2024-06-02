@@ -42,6 +42,11 @@ function Navbar() {
         navigate('/card'); // Sepet sayfasına yönlendircek
     };
 
+    const goToFAQ = () => {
+        navigate('/FAQ'); // Sepet sayfasına yönlendircek
+    };
+
+
     const handleContact = () => {
         navigate('/contact'); 
     };
@@ -74,7 +79,7 @@ function Navbar() {
                         <button onClick={handleContact} className="whitespace-nowrap text-base font-bold text-side-gri hover:text-white px-4">
                             Contact Us
                         </button>
-                        <a href="/" className="whitespace-nowrap text-base font-bold text-side-gri px-4">
+                        <a href="/" onClick={goToFAQ} className="whitespace-nowrap text-base font-bold text-side-gri px-4">
                             FAQ
                         </a>
                     </div>

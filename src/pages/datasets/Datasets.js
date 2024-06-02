@@ -83,24 +83,25 @@ const Dataset = () => {
     return (
 
     <div>
-        <div className="flex justify-between items-start bg-white p-8 shadow-lg rounded-3xl w-9/12 ml-dashboard-table mt-32">
-        <div className="p-4 rounded-lg mr-4 w-1/2">
-            <div className='border-b-2 text-2xl font-semibold text-black'>
-                <p>Dataset Upload</p>
-            </div>
-            <div class="grid w-full max-w-xs items-center gap-1.5">
-                <label class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-36">File Input Area</label>
-                <input id="picture" type="file" webkitdirectory="true" multiple onChange={handleFileChange} class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"/>
-            </div>
-            <div class="grid w-full max-w-xs items-center gap-1.5">
-                <label class="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-36">Dataset Name</label>
-                <input id="picture" type="text" value={datasetName} onChange={handleNameChange} class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"/>
-            </div>
+<div className="bg-white p-8 shadow-lg rounded-3xl w-9/12 ml-dashboard-table mt-16 flex justify-center items-center">
+    <div className="bg-gray-100 rounded-3xl w-full max-w-2xl">
+        <div className='border-b-2 text-2xl font-semibold text-black p-6'>
+            <p>Dataset Upload</p>
         </div>
-        <div className="w-1/2 p-4">
-            <button onClick={handleUpload} className="mt-4 px-14 font-extrabold py-2 bg-gradient-to-r from-green-500 to-purple-500 hover:bg-green-400 text-white rounded-xl">Add</button>
+        <div className="grid w-full max-w-xs items-center gap-1.5 p-6">
+            <label className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-4">File Input Area</label>
+            <input id="picture" type="file" webkitdirectory="true" multiple onChange={handleFileChange} className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"/>
         </div>
+        <div className="grid w-full max-w-xs items-center gap-1.5 p-6">
+            <label className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-4">Dataset Name</label>
+            <input id="picture" type="text" value={datasetName} onChange={handleNameChange} className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"/>
         </div>
+        <div className="flex justify-center p-6">
+            <button onClick={handleUpload} className="px-14 font-extrabold py-2 bg-gradient-to-r from-green-500 to-purple-500 hover:bg-green-400 text-white rounded-xl">Add</button>
+        </div>
+    </div>
+</div>
+
 
         <div className="bg-blue-950 rounded-3xl p-6 w-9/12 ml-dashboard-table mt-16">
           <div>
