@@ -42,10 +42,13 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response1 = await modelService.boughtModels(setModels);
-        const response2 = await modelService.myModels(setUpload);
-        const response3 = await modelService.myDatasets(setData);
+        const token = localStorage.getItem('jwtToken');
+        const username = modelService.getUsernameFromToken(token);
+        await modelService.boughtModels(setModels);
+        await modelService.myModels(setUpload);
+        const response = await modelService.myDatasets(username);
 
+        setData(response);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -282,10 +285,10 @@ const Dashboard = () => {
                       />
                     </td>
                     <td className="px-6 py-4">
-                      {dataset.name}
+                      {dataset.dataset_name}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      {dataset.date}
+                      {dataset.created_at}
                     </td>
                   </tr>
                 ))}

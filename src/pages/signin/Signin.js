@@ -33,7 +33,8 @@ const Signin = () => {
       const response = await authService.signin(userInfo);
       console.log("hellour");
       console.log(response);
-      navigate('/landingPage')
+      // navigate('/landingPage')
+      navigate('/dashboard')  //TODO şimdilik, sonra bunu kaldır
     } catch (error) {
       console.error('Login failed:', error.response ? error.response.data : 'No response');
       alert('Login failed: ' + (error.response ? error.response.data.message : 'No response'));

@@ -183,8 +183,7 @@ const uploadModel = async(payload) => {
         const response = await axios.post(`${MODEL_API_URL}/upload-model`, payload, {
             headers: {
                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
-                'Content-Type': 'multipart/form-data',
-                'Access-Control-Allow-Origin' : '*'
+                'Content-Type': 'multipart/form-data'
             }
             });
         
@@ -203,15 +202,15 @@ const modelPhoto = async(modelInfo) => {
         const token = localStorage.getItem('jwtToken');
         const params = new URLSearchParams(modelInfo).toString(); // Convert modelInfo to query string
 
-        const response = await axios.get(`${MODEL_API_URL}/get-image?${params}`, modelInfo, {
+        const response = await axios.get(`${MODEL_API_URL}/get-image?${params}`, params, {
             headers: {
                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
                 'Content-Type': 'multipart/form-data'
             }
-            });
+        });
         
         console.log("from s3: ", response);
-        return response;
+        return response.data;
     } catch (error) {
         console.log(error);
         throw error;

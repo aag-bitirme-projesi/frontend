@@ -21,7 +21,7 @@ const Run = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePay = () => {
-    navigate(`/card`);
+    navigate(`/pay`);
   };
 
   const handleModelChange = (event) => {
@@ -30,7 +30,7 @@ const Run = () => {
 
   const handleRun = async () => {
     // kullanım hakkı yoksa modal açılacak
-    const result = performCheck();
+    const result = 1 ;//performCheck();
     if (result === 0) {
       setIsModalOpen(true);
     } else {

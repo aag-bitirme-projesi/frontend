@@ -58,22 +58,13 @@ const Card = () => {
       setPaymentStatus('denied');
     } finally {
       setIsLoading(false);
+      navigate('/dashboard');
     }
   };
 
   const handleClose = () => {
     setIsLoading(false);
     setPaymentStatus(null);
-  };
-
-  const fetchImage = async (modelInfo) => {
-    try {
-      const response = await modelService.modelPhoto(modelInfo);
-      return response.data; // Assuming response.data contains the URL
-    } catch (error) {
-      console.error('Error fetching image:', error);
-      return null;
-    }
   };
 
   useEffect(() => {
@@ -91,7 +82,15 @@ const Card = () => {
             console.log("item: ", item.name)
             console.log("developer: ", item.name.split('\\')[0]);
             console.log("model name: ", item.name.split('\\')[1]);
-            const imageUrl = await fetchImage({ username: item.name.split('\\')[0], name: item.name.split('\\')[1] });
+
+            const modelInfo = {
+              'username': item.name.split('\\')[0],
+              'name': item.name.split('\\')[1]
+            };
+
+            let imageUrl = await modelService.modelPhoto(modelInfo);
+            imageUrl = imageUrl[0];
+            console.log("imageUrl: ", imageUrl[0]);
             return { ...item, imageUrl };
           })
         );
@@ -138,7 +137,7 @@ const Card = () => {
           {orderItems.map(item => (
             <div key={item.id} className="flex bg-ebebeb justify-between rounded-xl items-center mb-4 pl-10 p-3 pr-10">
               <div className="flex items-center">
-                <img src={`item.imageUrl`} alt={item.name} className="h-20 w-20 mr-4"/>
+                <img src={item.imageUrl} alt={item.name} className="h-20 w-20 mr-4"/>
                 <div>
                   <p>{item.name}</p>
                 </div>
