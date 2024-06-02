@@ -22,10 +22,10 @@ const Card = () => {
   const [orderItems, setOrderItems] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState(null); 
+  const [paymentStatus, setPaymentStatus] = useState(null);
   const modalRef = useRef(null);
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
       await orderService.removeFromCart(id);
       setOrderItems(orderItems.filter(item => item.id !== id));
@@ -41,7 +41,7 @@ const Card = () => {
     });
   };
 
-  const handlePay = async(e) => {
+  const handlePay = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     // setTimeout(() => {
@@ -90,9 +90,9 @@ const Card = () => {
           response.data.map(async (item) => {
             console.log("item: ", item.name)
             console.log("developer: ", item.name.split('\\')[0]);
-            console.log("model name: ", item.name.split('\\')[1]);
+            console.log("model name: ", item.name.split('\\')[1]);        
             const imageUrl = await fetchImage({ username: item.name.split('\\')[0], name: item.name.split('\\')[1] });
-            return { ...item, imageUrl };
+            return { ...item,  imageUrl: <img src={imageUrl} style={{ width: '50px', height: '50px' }} /> };
           })
         );
         setOrderItems(itemsWithImages);
@@ -138,7 +138,7 @@ const Card = () => {
           {orderItems.map(item => (
             <div key={item.id} className="flex bg-ebebeb justify-between rounded-xl items-center mb-4 pl-10 p-3 pr-10">
               <div className="flex items-center">
-                <img src={`item.imageUrl`} alt={item.name} className="h-20 w-20 mr-4"/>
+                <img src={`item.imageUrl`} alt={item.name} className="h-20 w-20 mr-4" />
                 <div>
                   <p>{item.name}</p>
                 </div>
@@ -156,20 +156,26 @@ const Card = () => {
           <form onSubmit={handlePay}>
             <div className="mb-4 text-black">
               <label className="block font-bold text-white mb-1">Name Surname</label>
-              <input type="text" value={paymentDetails.cardHolder} name="cardHolder" onChange={handleInputChange} className="w-full p-2 border rounded-xl"/>
+              <input type="text" value={paymentDetails.cardHolder} name="cardHolder" onChange={handleInputChange} className="w-full p-2 border rounded-xl" />
             </div>
             <div className="mb-4 text-black">
               <label className="block font-bold text-white mb-1">Card Number</label>
-              <input type="text" value={paymentDetails.cardNumber} name="cardNumber" onChange={handleInputChange} className="w-full p-2 border rounded-xl"/>
+              <input type="text" value={paymentDetails.cardNumber} name="cardNumber" onChange={handleInputChange} className="w-full p-2 border rounded-xl" />
             </div>
             <div className='w-full flex'>
               <div className="mb-4 w-1/4 text-black">
-                  <label className="block font-bold text-white mb-1">CVV</label>
-                  <input type="text" value={paymentDetails.cvv} name="cvv" onChange={handleInputChange} className="w-full p-2 border rounded-xl"/>
+                <label className="block font-bold text-white mb-1">CVV</label>
+                <input type="text" value={paymentDetails.cvv} name="cvv" onChange={handleInputChange} className="w-full p-2 border rounded-xl" />
               </div>
-              <div className="mb-4 w-3/4 ml-10 text-black">
-                  <label className="block font-bold text-white mb-1">Expiration Date</label>
-                  <input type="text" value={paymentDetails.expiry} name="expiry"  className="w-full p-2 border rounded-xl"/>
+              <div className="mb-4 w-full flex justify-between ml-10 text-black">
+                <div className="flex flex-col w-1/2">
+                  <label className="block font-bold text-white mb-1">Month</label>
+                  <input type="text" value={paymentDetails.expiry} name="expiry" className="w-full p-2 border rounded-xl" />
+                </div>
+                <div className="flex flex-col w-1/2 ml-4">
+                  <label className="block font-bold text-white mb-1">Year</label>
+                  <input type="text" value={paymentDetails.expiry} name="expiry" className="w-full p-2 border rounded-xl" />
+                </div>
               </div>
             </div>
             <button type="submit" className="w-full bg-gradient-to-r from-green-500 to-purple-500 font-black text-white p-2 mt-6 rounded-xl ">Pay</button>
