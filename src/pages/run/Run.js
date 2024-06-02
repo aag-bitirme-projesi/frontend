@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import ModelService from '../../services/ModelService';
+
 const Run = () => {
   const navigate = useNavigate();
 
@@ -26,13 +28,25 @@ const Run = () => {
     setSelectedModel(event.target.value);
   };
 
-  const handleRun = () => {
+  const handleRun = async () => {
     // kullanım hakkı yoksa modal açılacak
     const result = performCheck();
     if (result === 0) {
       setIsModalOpen(true);
     } else {
-      navigate('/runSection');
+
+      try {
+        var response = await ModelService.openContainer(
+          {
+            'username': 'ataberk',
+            'name': 'mobilenet-test'
+          }
+        );
+        navigate('/runSection', {state: {containerId: response.data.containerId, port: response.data.port}});
+      } catch (error) {
+        console.error('Docker failed:', error.response ? error.response.data : 'No response');
+        alert('Docker failed: ' + (error.response ? error.response.data.message : 'No response'));
+      }
     }
   };
 

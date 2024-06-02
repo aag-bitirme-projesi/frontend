@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const RunSection = () => {
   const navigate = useNavigate();
 
-  const [files] = useState([
-    { name: 'asdfad.csv', size: '950 Mb', progress: 100, status: 'completed' },
-    { name: 'learning.csv', size: '1.2 Gb', progress: 65, status: 'error' },
-    { name: 'asasd.arff', size: '950 Mb', progress: 100, status: 'completed' }
+  const { state } = useLocation();
+  const { containerId, port } = state;
+  const CONTAINER_URL = `http://localhost:${port}`;
+
+  const [files, setFiles] = useState([
+    // { name: 'asdfad.csv', size: '950 Mb', progress: 100, status: 'completed' },
+    // { name: 'learning.csv', size: '1.2 Gb', progress: 65, status: 'error' },
+    // { name: 'asasd.arff', size: '950 Mb', progress: 100, status: 'completed' }
   ]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const data = {
     models: [
@@ -66,8 +72,76 @@ const RunSection = () => {
     setShowDatasetUpload(false);
   }; 
 
-  const handleRun = () => {
-    navigate('/output');
+  const handleFileUpload = (event) => {
+    var files = []
+    for (var i = 0; i < event.target.files.length; i++) {
+      var file = event.target.files[i];
+
+      var name = file.name;
+      var size = file.size;
+      var progress = 100;
+      var status = 'completed';
+
+      var size_postfix = 'B';
+      if (size > 1024) {
+        size = size / 1024;
+        size_postfix = 'KB';
+      }
+      if (size > 1024) {
+        size = size / 1024;
+        size_postfix = 'MB';
+      }
+      if (size > 1024) {
+        size = size / 1024;
+        size_postfix = 'GB';
+      }
+      size = size.toFixed(0) + ' ' + size_postfix;
+
+      files.push({ name, size, progress, status });
+    }
+    
+    setFiles(files);
+    setSelectedFiles(event.target.files);
+  }
+
+  const handleRun = async () => {
+    console.log(CONTAINER_URL);
+
+    // Send files as payload
+    const formData = new FormData();
+    for (const file of Array.from(selectedFiles)) {
+      console.log(file);
+      formData.append('files', file);
+    }
+    
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await axios.post(`${CONTAINER_URL}/test`, formData, {
+          headers: {
+              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin' : '*'
+          }
+          });
+      
+        const responseText = await response.data;
+        const responseLines = responseText.split('\n');
+        console.log(responseLines);
+        
+        var output = [];
+        for (var i = 0; i < responseLines.length; i++) {
+          var line = responseLines[i].split(',');
+          output.push({ filename: line[0], prediction: line[1] });
+        }
+        navigate('/output', {state: {containerId: containerId, outputData: output}});
+
+        // return response;
+  } catch (error) {
+      console.log(error);
+      throw error;
+  } 
+
+  //   navigate('/output');
   };
 
   const handleMethodChange = (event) => {
@@ -163,7 +237,7 @@ const RunSection = () => {
       </div>
       <div className="grid w-full max-w-xs items-center gap-1.5">
         <label className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-36">File Input Area</label>
-        <input id="picture" type="file" className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium" multiple /> {/* Added multiple attribute */}
+        <input id="picture" type="file" className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium" multiple onChange={handleFileUpload}/> {/* Added multiple attribute */}
       </div>
     </div>
     <div className="w-1/2 p-4">
