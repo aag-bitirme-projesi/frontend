@@ -188,6 +188,44 @@ const modelPhoto = async(modelInfo) => {
     } 
 };
 
+const openContainer = async(payload) => {
+    try {
+        const token = localStorage.getItem('jwtToken');
+        const response = await axios.post(`${MODEL_API_URL}/open-container`, payload, {
+            headers: {
+                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                'Content-Type': 'multipart/form-data',
+                'Access-Control-Allow-Origin' : '*'
+            }
+            });
+        
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    } 
+};
+
+const closeContainer = async(payload) => {
+    try {
+        const token = localStorage.getItem('jwtToken');
+        const response = await axios.post(`${MODEL_API_URL}/close-container`, payload, {
+            headers: {
+                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                'Content-Type': 'multipart/form-data',
+                'Access-Control-Allow-Origin' : '*'
+            }
+            });
+        
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    } 
+};
+
 const modelService = { decodeToken, getUsernameFromToken, boughtModels, myModels, myDatasets, 
-    deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto };
+    deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto, openContainer, closeContainer };
 export default modelService;
