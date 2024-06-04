@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { RingLoader } from 'react-spinners';
 import modelService from '../../services/ModelService';
 
 const Dataset = () => {
@@ -7,6 +8,7 @@ const Dataset = () => {
     const [data, setData] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [datasetName, setDatasetName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFileChange = (e) => {
         const files = e.target.files;
@@ -47,6 +49,7 @@ const Dataset = () => {
         }
 
         try {
+            setIsLoading(true);
             const response = await modelService.uploadDataset(formData);
 
             console.log('Upload success:', response.data);
@@ -54,6 +57,8 @@ const Dataset = () => {
         } catch (error) {
             console.error('Error uploading dataset:', error);
             // setData([]);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -151,6 +156,13 @@ const Dataset = () => {
             </table>
             </div>
         </div>
+        {isLoading && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="bg-white p-16 rounded-2xl shadow-lg">
+              <RingLoader color="rgb(179, 0, 255)" size={75} speedMultiplier={1.5}/>
+            </div>
+          </div>
+        )}
         </div>
     </div>    
     );
