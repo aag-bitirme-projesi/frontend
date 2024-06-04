@@ -149,28 +149,18 @@ const deleteMyModels = async(models) => {
     } 
 };
 
-const allModels = async(setProducts) => {
+const allModels = async() => {
     try {
+        
         const token = localStorage.getItem('jwtToken');
-        const response = await axios.get(`${API_URL}/all`, {
+        const response = await axios.get(`${MODEL_API_URL}/all`, {
             headers: {
                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             }
-            });
+        });
 
-        const products = response.data;
-        // console.log(response);
-
-        setProducts(products.map(product => ({
-            id: product.id || '',
-            name: product.name || '',
-            description: product.description || '',
-            date: product.createdAt || '',
-            price: product.price || 0 // Ensure price is not null
-        })));
-
-        return response;
+        return response.data;;
     } catch (error) {
         console.log(error);
         throw error;
@@ -255,6 +245,24 @@ const closeContainer = async(payload) => {
     } 
 };
 
-const modelService = { decodeToken, getUsernameFromToken, getEmailFromToken, boughtModels, myModels, myDatasets, 
-    deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto, uploadDataset, openContainer, closeContainer };
+const getModel = async(modelId) => {
+    try {
+        const token = localStorage.getItem('jwtToken');
+        const response = await axios.get(`${MODEL_API_URL}/by-id${modelId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        return response.data;;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    } 
+};
+
+const modelService = { decodeToken, getUsernameFromToken, getEmailFromToken, boughtModels, 
+    myModels, myDatasets, deleteDatasets, deleteMyModels, allModels, uploadModel, 
+    modelPhoto, uploadDataset, openContainer, closeContainer, getModel };
 export default modelService;

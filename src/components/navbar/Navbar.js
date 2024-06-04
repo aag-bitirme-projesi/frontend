@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Profilphoto from '../../assets/pics/profilphoto.png';
-import axios from 'axios';
 import userService from '../../services/UserService';
 
 function Navbar() {
@@ -95,7 +94,7 @@ function Navbar() {
                         </button>
                         <div className='flex items-center ml-4'>
                             <div className="rounded-full bg-center bg-cover inline-block w-12 h-12 " style={{ backgroundImage: `url(${profile.imageUrl})` }}></div>
-                            <button className="ml-4 whitespace-nowrap inline-flex items-center justify-center text-lg font-black text-white">
+                            <button className="ml-4 whitespace-nowrap inline-flex items-center justify-center text-lg font-black text-white" onClick={goToProfile}>
                                 {profile.name}
                             </button>
                         </div>

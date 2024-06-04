@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import AI from "../../assets/pics/ai.png";
-import axios from 'axios';
 
 const Details = () => {
     const navigate = useNavigate();
@@ -29,30 +28,6 @@ const Details = () => {
             navigate("/models"); // Model bulunamazsa ana listeye yönlendir
         }
     }, [id, navigate]);
-    
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             // Model detaylarını çekmek
-    //             const response = await axios.get(`http://localhost:3000/models/${id}`);
-    //             setModelDetails(response.data.modelDetails);
-
-    //             // Dosyaları çekmek
-    //             const filesResponse = await axios.get(`http://localhost:3000/models/${id}/files`);
-    //             setFiles(filesResponse.data);
-
-    //             // Görselleri çekmek
-    //             const imagesResponse = await axios.get(`http://localhost:3000/models/${id}/images`);
-    //             setImages(imagesResponse.data);
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //             navigate("/models");  // Hata durumunda ana sayfaya yönlendir
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [id, navigate]);
-
 
     const handleCancel = () => {
         navigate(-1);
