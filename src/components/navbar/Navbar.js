@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Profilphoto from '../../assets/pics/profilphoto.png';
 import axios from 'axios';
+import userService from '../../services/UserService';
 
 function Navbar() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -12,21 +13,15 @@ function Navbar() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const token = localStorage.getItem('jwtToken');
-                const response = await axios.get('http://localhost:8080/user/user/profile', {
-                    headers: {
-                      'Authorization': `Bearer ${token}`,
-                      'Content-Type': 'application/json'
-                    },
-                  });
-
+                const response = await userService.profile();
+                console.log("navbar: ", response);
                 setProfile({ 
-                    name: response.data.name, 
-                    imageUrl: response.data.profilePhoto 
+                    name: response.name, 
+                    imageUrl: response.profilePicture
                 });
             } catch (error) {
                 console.error('Profil bilgileri alınırken hata oluştu', error);
-                setProfile({ name: "Ayça Akyol", imageUrl: Profilphoto });
+                setProfile({ name: "", imageUrl: Profilphoto });
             }
         };
 
@@ -46,6 +41,9 @@ function Navbar() {
         navigate('/FAQ'); // Sepet sayfasına yönlendircek
     };
 
+    const goToProfile = () => {
+        navigate('/profile');
+    };
 
     const handleContact = () => {
         navigate('/contact'); 

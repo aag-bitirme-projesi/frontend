@@ -7,7 +7,9 @@ const Output = () => {
 
     const navigate = useNavigate();
     const { state } = useLocation();
+    console.log("hello", state);
     const { containerId, outputData } = state;
+    console.log("hello", state);
 
     const Table = ({outputData}) => {
         const headers = Object.keys(outputData[0]);

@@ -14,6 +14,16 @@ const RunSection = () => {
     // { name: 'learning.csv', size: '1.2 Gb', progress: 65, status: 'error' },
     // { name: 'asasd.arff', size: '950 Mb', progress: 100, status: 'completed' }
   ]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRunWaiting = () => {
+    setIsLoading(true); // Set loading to true when the user clicks the "Run" button
+    // Navigate to the output page immediately
+    // handleRun();
+    setIsLoading(false); // Set loading to false
+    // navigate('/output');
+  };
+
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const data = {
@@ -53,14 +63,14 @@ const RunSection = () => {
     setShowSelection(true);
   };
   const handlePay = () => {
-    navigate(`/card`);
+    navigate(`/pay`);
   };
 
   const handleTrain = () => {
     setShowModelSelection(true);
     setShowDatasetUpload(false);
   };
-  
+
   const handleDataSet = () => {
     setShowModelSelection(true);
     setShowDatasetUpload(false);
@@ -70,7 +80,7 @@ const RunSection = () => {
   const handleFinetune = () => {
     setShowModelSelection(true);
     setShowDatasetUpload(false);
-  }; 
+  };
 
   const handleFileUpload = (event) => {
     var files = []
@@ -81,7 +91,7 @@ const RunSection = () => {
       var size = file.size;
       var progress = 100;
       var status = 'completed';
-
+      console.log(state);
       var size_postfix = 'B';
       if (size > 1024) {
         size = size / 1024;
@@ -99,13 +109,14 @@ const RunSection = () => {
 
       files.push({ name, size, progress, status });
     }
-    
+
     setFiles(files);
     setSelectedFiles(event.target.files);
   }
 
   const handleRun = async () => {
     console.log(CONTAINER_URL);
+    // setIsLoading(true);
 
     // Send files as payload
     const formData = new FormData();
@@ -113,35 +124,36 @@ const RunSection = () => {
       console.log(file);
       formData.append('files', file);
     }
-    
+
     try {
       const token = localStorage.getItem('jwtToken');
       const response = await axios.post(`${CONTAINER_URL}/test`, formData, {
-          headers: {
-              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
-              'Content-Type': 'multipart/form-data',
-              'Access-Control-Allow-Origin' : '*'
-          }
-          });
-      
-        const responseText = await response.data;
-        const responseLines = responseText.split('\n');
-        console.log(responseLines);
-        
-        var output = [];
-        for (var i = 0; i < responseLines.length; i++) {
-          var line = responseLines[i].split(',');
-          output.push({ filename: line[0], prediction: line[1] });
+        headers: {
+          'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+          'Content-Type': 'multipart/form-data'
         }
-        navigate('/output', {state: {containerId: containerId, outputData: output}});
+      });
+      console.log("hererere: ", response);
+      const responseText = response.data;
+      const responseLines = responseText.split('\n');
+      console.log("hh", responseLines);
 
-        // return response;
-  } catch (error) {
+      var output = [];
+      for (var i = 0; i < responseLines.length; i++) {
+        var line = responseLines[i].split(',');
+        output.push({ filename: line[0], prediction: line[1] });
+      }
+      console.log("here1: ", containerId);
+      // setIsLoading(false);
+      navigate('/output', { state: { containerId: containerId, outputData: output } });
+
+      // return response;
+    } catch (error) {
       console.log(error);
       throw error;
-  } 
+    }
 
-  //   navigate('/output');
+    //   navigate('/output');
   };
 
   const handleMethodChange = (event) => {
@@ -169,9 +181,9 @@ const RunSection = () => {
                 <label key={model.name} className="flex text-white items-center space-x-3">
                   <div className="flex flex-col space-y-4">
                     <label className="relative flex items-center cursor-pointer">
-                      <input 
-                        className="sr-only peer" 
-                        type="radio" 
+                      <input
+                        className="sr-only peer"
+                        type="radio"
                         id={model.name}
                         name="model"
                         value={model.name}
@@ -203,9 +215,9 @@ const RunSection = () => {
                   <label key={model.name} className="flex text-white items-center space-x-3">
                     <div className="flex flex-col space-y-4">
                       <label className="relative flex items-center cursor-pointer">
-                        <input 
-                          className="sr-only peer" 
-                          type="radio" 
+                        <input
+                          className="sr-only peer"
+                          type="radio"
                           id={model.name}
                           name="method"
                           value={model.name}
@@ -229,51 +241,53 @@ const RunSection = () => {
           </div>
         )}
         {showDatasetUpload && (
-            <div className="mt-4 flex flex-col justify-start items-center">
-  <div className="flex justify-between bg-gray-200 p-10 rounded-2xl mt-4">
-    <div className="p-4 rounded-lg mr-4 w-1/2">
-      <div className='border-b-2 text-2xl font-semibold text-black'>
-        <p>Dataset Upload</p>
-      </div>
-      <div className="grid w-full max-w-xs items-center gap-1.5">
-        <label className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-36">File Input Area</label>
-        <input id="picture" type="file" className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium" multiple onChange={handleFileUpload}/> {/* Added multiple attribute */}
-      </div>
-    </div>
-    <div className="w-1/2 p-4">
-      {files.map((file, index) => (
-        <div key={index} className="mb-4 last:mb-0">
-          <div className="flex flex-col p-4 rounded-xl border-2 border-ebebeb shadow-xl">
-            <div className="flex justify-between items-center">
-              <span className="font-semibold truncate">{file.name}</span>
-              <span className="text-sm text-gray-500">{file.size}</span>
-            </div>
-            <div className="mt-2 flex items-center justify-between">
-              <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                <div className={`h-full ${file.status === 'completed' ? 'bg-green-500' : 'bg-red-500'}`} style={{ width: `${file.progress}%` }}></div>
+          <div className="mt-4 flex flex-col justify-start items-center">
+            <div className="flex justify-between bg-gray-200 p-10 rounded-2xl mt-4">
+              <div className="p-4 rounded-lg mr-4 w-1/2">
+                <div className='border-b-2 text-2xl font-semibold text-black'>
+                  <p>Dataset Upload</p>
+                </div>
+                <div className="grid w-full max-w-xs items-center gap-1.5">
+                  <label className="text-sm text-gray-400 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mt-36">File Input Area</label>
+                  <input id="picture" type="file" className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium" multiple onChange={handleFileUpload} /> {/* Added multiple attribute */}
+                </div>
               </div>
-              <div className="flex items-center ml-2">
-                <span className="text-sm font-semibold">{file.progress}%</span>
-                <span className={`ml-2 ${file.status === 'completed' ? 'text-green-500' : 'text-red-500'}`}>
-                  {file.status === 'completed' ? '✔' : '✖'}
-                </span>
+              <div className="w-1/2 p-4">
+                {files.map((file, index) => (
+                  <div key={index} className="mb-4 last:mb-0">
+                    <div className="flex flex-col p-4 rounded-xl border-2 border-ebebeb shadow-xl">
+                      <div className="flex justify-between items-center">
+                        <span className="font-semibold truncate">{file.name}</span>
+                        <span className="text-sm text-gray-500">{file.size}</span>
+                      </div>
+                      <div className="mt-2 flex items-center justify-between">
+                        <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                          <div className={`h-full ${file.status === 'completed' ? 'bg-green-500' : 'bg-red-500'}`} style={{ width: `${file.progress}%` }}></div>
+                        </div>
+                        <div className="flex items-center ml-2">
+                          <span className="text-sm font-semibold">{file.progress}%</span>
+                          <span className={`ml-2 ${file.status === 'completed' ? 'text-green-500' : 'text-red-500'}`}>
+                            {file.status === 'completed' ? '✔' : '✖'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <button onClick={handleRun} className="mt-4 px-14 font-extrabold py-2 bg-gradient-to-r from-green-500 to-purple-500 hover:bg-green-400 text-white rounded-xl">
+                  Run
+                </button>
+                {/* Result section */}
+                {showResult && (
+                  <div className="mt-4 bg-gray-200 p-4 rounded-xl">
+                    <p className="text-lg font-semibold">Trained finished</p>
+                    <p className="text-sm">Final loss: ...</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div>
-      ))}
-      <button onClick={handleRun} className="mt-4 px-14 font-extrabold py-2 bg-gradient-to-r from-green-500 to-purple-500 hover:bg-green-400 text-white rounded-xl">Add</button>
-      
-      {/* Result section */}
-      {showResult && (
-        <div className="mt-4 bg-gray-200 p-4 rounded-xl">
-          <p className="text-lg font-semibold">Trained finished</p>
-          <p className="text-sm">Final loss: ...</p>
-        </div>
-      )}
-    </div>
-  </div>
-</div>
 
         )}
       </div>

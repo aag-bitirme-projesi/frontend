@@ -255,6 +255,6 @@ const closeContainer = async(payload) => {
     } 
 };
 
-const modelService = { decodeToken, getUsernameFromToken, boughtModels, myModels, myDatasets, 
+const modelService = { decodeToken, getUsernameFromToken, getEmailFromToken, boughtModels, myModels, myDatasets, 
     deleteDatasets, deleteMyModels, allModels, uploadModel, modelPhoto, uploadDataset, openContainer, closeContainer };
 export default modelService;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import modelService from './ModelService';
 
 const API_URL = 'http://localhost:8080/user/user'; // Api url
 
@@ -32,25 +33,22 @@ const resetPassword = async(newPassword, token) => {
   }
 };
 
-const profile = async(setFormData) => {
+const profile = async() => {
     try {
+        console.log("i p1");
         const token = localStorage.getItem('jwtToken');
-        const response = await axios.get(`${API_URL}/profile`,  {
+        const email = modelService.getEmailFromToken(token);
+
+        const response = await axios.get(`${API_URL}/get-user/${email}`,  {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             }
           });
-        const userData = response.data;
-        setFormData({
-            name: userData.name || '',
-            username: userData.username || '',
-            email: userData.email || '',
-            github: userData.github || '',
-            cv: userData.cv || '',
-            profilePhoto: userData.profilPhoto || ''
-          });
-        return response;
+
+        console.log(response.data);
+        
+        return response.data;
       } catch (error) {
         console.log(error);
         throw error;
