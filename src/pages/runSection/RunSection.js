@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RingLoader } from 'react-spinners';
+import { LinearProgress } from '@mui/material';
+import Stack from '@mui/material';
 import axios from 'axios';
 
 import ModelService from '../../services/ModelService';
@@ -46,6 +48,11 @@ const RunSection = () => {
   const [isTesting, setIsTesting] = useState(false);
   const [selectedModel, setSelectedModel] = useState('');
 
+  const [progress, setProgress] = useState('');
+  const [status, setStatus] = useState('');
+  const [progressPercentage, setProgressPercentage] = useState(0);
+  const [showProgress, setShowProgress] = useState(false);
+
   const handleBeforeUnload = async (event) => {
     try {
       setIsLoading(true);
@@ -78,7 +85,6 @@ const RunSection = () => {
     setShowDatasetUpload(false);
     setShowSelection(true);
 
-    // Get chosen RadioButton
     try {
       setIsLoading(true);
       const token = localStorage.getItem('jwtToken');
@@ -95,10 +101,7 @@ const RunSection = () => {
       const datasetFile = new Blob([responseBlob], { type: 'application/octet-stream' });
       newFormData.append('dataset', datasetFile, 'dataset_file_name');
 
-      console.log(responseBlob.split('\n')[0])
-
       try {
-        
         const datasetResponse = await axios.post(`${CONTAINER_URL}/upload-dataset`, newFormData, {
           headers: {
               'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
@@ -106,19 +109,46 @@ const RunSection = () => {
               'Access-Control-Allow-Origin' : '*'
           }
           });
-
+          
+          await new Promise(resolve => setTimeout(resolve, 1000)); // wait for 1 second before fetching again
+          while (true) {
+            
+            try {
+                setShowProgress(true);
+                const response = await axios.post(`${CONTAINER_URL}/`, {
+                  headers : {
+                    'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                    'Access-Control-Allow-Origin' : '*'
+                  }
+                })
+                const { progress, status } = response.data;
+                setProgress(progress);
+                setStatus(status);
+    
+                const [current, total] = progress.split('/').map(Number);
+                const perc = (current / total) * 100;
+                setProgressPercentage(perc);
+        
+                if (status !== 'uploading dataset...') {
+                  break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000)); // wait for 1 second before fetching again
+              } catch (error) {
+              console.log(error);
+            }
+          }
       } catch (error) {
-        console.error('Error testing dataset:', error);
+        console.error('Error uploding dataset to docker:', error);
       }
-
     } catch (error) {
       console.error('Error fetching datasets:', error);
-      // setData([]);
     } finally {
       setIsLoading(false);
+      setShowProgress(false);
     }
     
   };
+
   const handlePay = () => {
     navigate(`/card`);
   };
@@ -381,8 +411,24 @@ const RunSection = () => {
 
         {(isLoading || isTesting) && (
           <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
-            <div className="bg-white p-16 rounded-2xl shadow-lg">
+            <div className="bg-white p-16 rounded-2xl shadow-lg justify-center items-center">
               <RingLoader color="rgb(179, 0, 255)" size={75} speedMultiplier={1.5}/>
+              {showProgress && (
+                <div>
+                  <p className="text-lg font-semibold mt-4">{progressPercentage.toFixed(2)}</p>
+                </div>
+              )}
+              {showProgress && (
+                <LinearProgress 
+                  sx={{
+                    height: '15px',
+                    backgroundColor: 'rgb(179, 0, 255)',
+                    '& .MuiLinearProgress-bar': {
+                      backgroundColor: 'rgb(3, 255, 53)'
+                    }
+                  }}
+                  variant='determinate' value={progressPercentage}/>
+              )}
             </div>
           </div>
         )}
