@@ -10,7 +10,7 @@ const RunSection = () => {
 
   const { state } = useLocation();
   const { containerId, port } = state;
-  const CONTAINER_URL = `http://localhost:${port}`;
+  const CONTAINER_URL = `http://localhost:${64321}`;
 
   const [files, setFiles] = useState([
     // { name: 'asdfad.csv', size: '950 Mb', progress: 100, status: 'completed' },
@@ -19,22 +19,24 @@ const RunSection = () => {
   ]);
   const [selectedFiles, setSelectedFiles] = useState([]);
 
+  const [models, setModels] = useState([]);
+
   const data = {
-    models: [
-      { name: 'data analysis module' },
-      { name: 'historical reporting module' },
-      { name: 'classification module' },
-      { name: 'historical reporting mosafdule' },
-      { name: 'classification modasdfgule' },
-      { name: 'coloring module' }
-    ],
+    // models: [
+    //   { name: 'data analysis module' },
+    //   { name: 'historical reporting module' },
+    //   { name: 'classification module' },
+    //   { name: 'historical reporting mosafdule' },
+    //   { name: 'classification modasdfgule' },
+    //   { name: 'coloring module' }
+    // ],
     options: [
       { name: 'train' },
       { name: 'finetune' },
     ]
   };
 
-  const [selectedModel, setSelectedModel] = useState(data.models[0].name);
+  // const [selectedModel, setSelectedModel] = useState(data.models[0].name);
   const [showModelSelection, setShowModelSelection] = useState(false);
   const [showDatasetUpload, setShowDatasetUpload] = useState(false);
   const [showResult, setShowResult] = useState(false);
@@ -42,6 +44,7 @@ const RunSection = () => {
   const [selectedMethod, setSelectedMethod] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('');
 
   const handleBeforeUnload = async (event) => {
     try {
@@ -70,10 +73,51 @@ const RunSection = () => {
     setShowSelection(false);
     setSelectedMethod(false);
   };
-  const handleSelection = () => {
+  const handleSelection = async () => {
     setShowModelSelection(false);
     setShowDatasetUpload(false);
     setShowSelection(true);
+
+    // Get chosen RadioButton
+    try {
+      setIsLoading(true);
+      const token = localStorage.getItem('jwtToken');
+      const username = ModelService.getUsernameFromToken(token);
+
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('dataset_name', selectedModel);
+
+      const response = await ModelService.getDataset(formData);
+      const responseBlob = await response.data;
+
+      const newFormData = new FormData();
+      const datasetFile = new Blob([responseBlob], { type: 'application/octet-stream' });
+      newFormData.append('dataset', datasetFile, 'dataset_file_name');
+
+      console.log(responseBlob.split('\n')[0])
+
+      try {
+        
+        const datasetResponse = await axios.post(`${CONTAINER_URL}/upload-dataset`, newFormData, {
+          headers: {
+              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin' : '*'
+          }
+          });
+
+      } catch (error) {
+        console.error('Error testing dataset:', error);
+      }
+
+    } catch (error) {
+      console.error('Error fetching datasets:', error);
+      // setData([]);
+    } finally {
+      setIsLoading(false);
+    }
+    
   };
   const handlePay = () => {
     navigate(`/card`);
@@ -84,10 +128,32 @@ const RunSection = () => {
     setShowDatasetUpload(false);
   };
   
-  const handleDataSet = () => {
+  const handleDataSet = async () => {
     setShowModelSelection(true);
     setShowDatasetUpload(false);
     setShowSelection(false);
+
+    try {
+
+      setIsLoading(true);
+
+      const token = localStorage.getItem('jwtToken');
+      const username = ModelService.getUsernameFromToken(token);
+
+      const response = await ModelService.myDatasets(username);
+      console.log(response)
+
+      setModels(response);
+    } catch (error) {
+      console.error('Error fetching datasets:', error);
+      // setData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleModelChange = (event) => {
+    setSelectedModel(event.target.value);
   };
 
   const handleFinetune = () => {
@@ -197,19 +263,20 @@ const RunSection = () => {
           <div className="flex justify-between bg-bg-mavi p-10 rounded-2xl mt-4">
             <div className="w-1/2 space-y-4 ">
               <h2 className="font-bold text-2xl border-b-2 border-slate-600 w-9/12 bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-purple-500 mb-2">Select Dataset</h2>
-              {data.models.map((model) => (
-                <label key={model.name} className="flex text-white items-center space-x-3">
+              {models.map((model) => (
+                <label key={model.dataset_name} className="flex text-white items-center space-x-3">
                   <div className="flex flex-col space-y-4">
                     <label className="relative flex items-center cursor-pointer">
                       <input 
                         className="sr-only peer" 
                         type="radio" 
-                        id={model.name}
+                        id={model.dataset_name}
                         name="model"
-                        value={model.name}
+                        value={model.dataset_name}
+                        onChange={handleModelChange}
                       />
                       <div className="w-6 h-6 bg-transparent border-2 border-purple-500 rounded-full peer-checked:bg-purple-500 peer-checked:border-purple-500 peer-hover:shadow-lg peer-hover:shadow-purple-500/50 peer-checked:shadow-lg peer-checked:shadow-purple-500/50 transition duration-300 ease-in-out"></div>
-                      <span className="ml-2 text-white font-thin">{model.name}</span>
+                      <span className="ml-2 text-white font-thin">{model.dataset_name}</span>
                     </label>
                   </div>
                 </label>
@@ -253,6 +320,7 @@ const RunSection = () => {
             </div>
           </div>
         )}
+
         {selectedMethod && (
           <div className="mt-4 bg-gray-200 p-4 rounded-xl">
             <p className="text-lg font-semibold">You have selected the {selectedMethod} method.</p>
@@ -260,6 +328,7 @@ const RunSection = () => {
             <p>Final loss...</p>
           </div>
         )}
+
         {showDatasetUpload && (
             <div className="mt-4 flex flex-col justify-start items-center">
   <div className="flex justify-between bg-gray-200 p-10 rounded-2xl mt-4">
@@ -307,7 +376,9 @@ const RunSection = () => {
   </div>
 </div>
 
-        )}
+      )}
+
+
         {(isLoading || isTesting) && (
           <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
             <div className="bg-white p-16 rounded-2xl shadow-lg">
