@@ -12,7 +12,7 @@ const RunSection = () => {
 
   const { state } = useLocation();
   const { containerId, port } = state;
-  const CONTAINER_URL = `http://localhost:${64321}`;
+  const CONTAINER_URL = `http://localhost:${port}`;
 
   const [files, setFiles] = useState([
     // { name: 'asdfad.csv', size: '950 Mb', progress: 100, status: 'completed' },
@@ -53,6 +53,9 @@ const RunSection = () => {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [showProgress, setShowProgress] = useState(false);
 
+  const [accuracy, setAccuracy] = useState(0);
+  const [loss, setLoss] = useState(0);
+
   const handleBeforeUnload = async (event) => {
     try {
       setIsLoading(true);
@@ -80,6 +83,7 @@ const RunSection = () => {
     setShowSelection(false);
     setSelectedMethod(false);
   };
+
   const handleSelection = async () => {
     setShowModelSelection(false);
     setShowDatasetUpload(false);
@@ -264,8 +268,88 @@ const RunSection = () => {
     }
   };
 
-  const handleMethodChange = (event) => {
+  const handleMethodChange = async (event) => {
     setSelectedMethod(event.target.value);
+    
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response0 = await axios.post(`${CONTAINER_URL}/stop`, {
+          headers: {
+              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin' : '*'
+          }
+      });
+      
+      const response1 = await axios.post(`${CONTAINER_URL}/reset`, {
+          headers: {
+              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin' : '*'
+          }
+      });
+  
+      const formData = new FormData();
+      formData.append('batch_size', 16);
+      formData.append('epochs', 10);
+
+      console.log('selected method:', event.target.value);
+  
+      if (event.target.value === 'finetune') {
+        const finetuneResponse = await axios.post(`${CONTAINER_URL}/finetune`, formData, {
+          headers: {
+              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin' : '*'
+          }
+        })
+      } else if (event.target.value === 'train') {
+        const trainingResponse = await axios.post(`${CONTAINER_URL}/train`, formData, {
+          headers: {
+              'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+              'Content-Type': 'multipart/form-data',
+              'Access-Control-Allow-Origin' : '*'
+          }
+        })
+      }
+
+      checkProgress(token);
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+  };
+
+  const checkProgress = async (token) => {
+    const interval = setInterval(async () => {
+      try {
+        const response = await axios.post(`${CONTAINER_URL}/`, {
+            headers: {
+                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
+                'Content-Type': 'multipart/form-data',
+                'Access-Control-Allow-Origin' : '*'
+            }
+        });
+
+        const {accuracy, loss, progress, status} = response.data;
+        setAccuracy(accuracy);
+        setLoss(loss);
+        setProgress(progress);
+        setStatus(status);
+
+        console.log(accuracy, loss, progress, status);
+
+        if (status !== 'finetuning...' && status !== 'training...') {
+          clearInterval(interval);
+        }
+
+      } catch (error) {
+          clearInterval(interval);
+          console.log(error);
+          throw error;
+      }
+    }, 1000);
   };
 
   useEffect(() => {
@@ -354,8 +438,10 @@ const RunSection = () => {
         {selectedMethod && (
           <div className="mt-4 bg-gray-200 p-4 rounded-xl">
             <p className="text-lg font-semibold">You have selected the {selectedMethod} method.</p>
-            <p>Train finished</p>
-            <p>Final loss...</p>
+            <p>Epochs: {progress}</p>
+            <p>Loss: {loss}</p>
+            <p>Accuracy: {accuracy}</p>
+            <p>{status == null ? 'Finished' : status}</p>
           </div>
         )}
 
@@ -405,29 +491,26 @@ const RunSection = () => {
     </div>
   </div>
 </div>
-
       )}
-
 
         {(isLoading || isTesting) && (
           <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
-            <div className="bg-white p-16 rounded-2xl shadow-lg justify-center items-center">
-              <RingLoader color="rgb(179, 0, 255)" size={75} speedMultiplier={1.5}/>
+            <div className="bg-white p-16 rounded-2xl shadow-lg flex flex-col justify-center items-center">
+              <RingLoader color="rgb(179, 0, 255)" size={100} speedMultiplier={1.5}/>
               {showProgress && (
-                <div>
-                  <p className="text-lg font-semibold mt-4">{progressPercentage.toFixed(2)}</p>
+                <div className='flex flex-col items-center'>
+                  <p className="text-lg font-semibold mt-4">{progressPercentage.toFixed(2)} %</p>
+                  <LinearProgress 
+                    sx={{
+                      width: '250px',
+                      height: '15px',
+                      backgroundColor: 'rgb(179, 0, 255)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: 'rgb(3, 255, 53)'
+                      }
+                    }}
+                    variant='determinate' value={progressPercentage}/>
                 </div>
-              )}
-              {showProgress && (
-                <LinearProgress 
-                  sx={{
-                    height: '15px',
-                    backgroundColor: 'rgb(179, 0, 255)',
-                    '& .MuiLinearProgress-bar': {
-                      backgroundColor: 'rgb(3, 255, 53)'
-                    }
-                  }}
-                  variant='determinate' value={progressPercentage}/>
               )}
             </div>
           </div>
