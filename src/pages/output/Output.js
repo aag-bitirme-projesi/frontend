@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { RingLoader } from 'react-spinners';
 
 import ModelService from '../../services/ModelService';
 
@@ -9,7 +10,7 @@ const Output = () => {
     const { state } = useLocation();
     console.log("hello", state);
     const { containerId, outputData } = state;
-    console.log("hello", state);
+    const [isLoading, setIsLoading] = useState(false);
 
     const Table = ({outputData}) => {
         const headers = Object.keys(outputData[0]);
@@ -51,6 +52,7 @@ const Output = () => {
 
         
       try {
+        setIsLoading(true);
         console.log('containerId', containerId);
         var response = await ModelService.closeContainer(
             {
@@ -61,6 +63,9 @@ const Output = () => {
       } catch (error) {
         console.error('Docker failed:', error.response ? error.response.data : 'No response');
         alert('Docker failed: ' + (error.response ? error.response.data.message : 'No response'));
+      }
+      finally {
+        setIsLoading(false);
       }
       
 
@@ -104,6 +109,13 @@ const Output = () => {
                     Close
                 </button>
             </div>
+            {isLoading && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+                    <div className="bg-white p-16 rounded-2xl shadow-lg">
+                    <RingLoader color="rgb(179, 0, 255)" size={75} speedMultiplier={1.5}/>
+                    </div>
+                </div>
+            )}
         </div>
 
     </div>

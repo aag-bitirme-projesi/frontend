@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RingLoader } from 'react-spinners';
 
 import ModelService from '../../services/ModelService';
 
@@ -19,6 +20,7 @@ const Run = () => {
 
   const [selectedModel, setSelectedModel] = useState(data.models[0].name);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePay = () => {
     navigate(`/pay`);
@@ -36,6 +38,7 @@ const Run = () => {
     } else {
 
       try {
+        setIsLoading(true);
         var response = await ModelService.openContainer(
           {
             'username': 'ataberk',
@@ -46,6 +49,9 @@ const Run = () => {
       } catch (error) {
         console.error('Docker failed:', error.response ? error.response.data : 'No response');
         alert('Docker failed: ' + (error.response ? error.response.data.message : 'No response'));
+      }
+      finally {
+        setIsLoading(false);
       }
     }
   };
@@ -105,6 +111,13 @@ const Run = () => {
             </button>
           </div>
         </div>
+        {isLoading && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="bg-white p-16 rounded-2xl shadow-lg">
+              <RingLoader color="rgb(179, 0, 255)" size={75} speedMultiplier={1.5}/>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
