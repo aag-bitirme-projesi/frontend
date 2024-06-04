@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { RingLoader } from 'react-spinners';
 import axios from 'axios';
+
+import ModelService from '../../services/ModelService';
 
 const RunSection = () => {
   const navigate = useNavigate();
@@ -37,6 +40,26 @@ const RunSection = () => {
   const [showResult, setShowResult] = useState(false);
   const [showSelection, setShowSelection] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+
+  const handleBeforeUnload = async (event) => {
+    try {
+      setIsLoading(true);
+      console.log('containerId', containerId);
+      var response = await ModelService.closeContainer(
+          {
+            'containerId': containerId
+          }
+      );
+    } catch (error) {
+      console.error('Docker failed:', error.response ? error.response.data : 'No response');
+      alert('Docker failed: ' + (error.response ? error.response.data.message : 'No response'));
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
 
   const handleAdd = () => {
     setShowResult(true);
@@ -110,11 +133,14 @@ const RunSection = () => {
     // Send files as payload
     const formData = new FormData();
     for (const file of Array.from(selectedFiles)) {
-      console.log(file);
+      // console.log(file);
       formData.append('files', file);
     }
     
     try {
+      setIsTesting(true);
+      console.log(isTesting);
+
       const token = localStorage.getItem('jwtToken');
       const response = await axios.post(`${CONTAINER_URL}/test`, formData, {
           headers: {
@@ -134,19 +160,25 @@ const RunSection = () => {
           output.push({ filename: line[0], prediction: line[1] });
         }
         navigate('/output', {state: {containerId: containerId, outputData: output}});
-
-        // return response;
-  } catch (error) {
-      console.log(error);
-      throw error;
-  } 
-
-  //   navigate('/output');
+    } catch (error) {
+        console.log(error);
+        throw error;
+    } finally {
+        setIsTesting(false);
+    }
   };
 
   const handleMethodChange = (event) => {
     setSelectedMethod(event.target.value);
   };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <div>
@@ -275,6 +307,13 @@ const RunSection = () => {
   </div>
 </div>
 
+        )}
+        {(isLoading || isTesting) && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="bg-white p-16 rounded-2xl shadow-lg">
+              <RingLoader color="rgb(179, 0, 255)" size={75} speedMultiplier={1.5}/>
+            </div>
+          </div>
         )}
       </div>
     </div>
