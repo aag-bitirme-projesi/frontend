@@ -14,7 +14,7 @@ const Profile = () => {
         email: '',
         github: '',
         cvLink: '',
-        profilPhoto: '',
+        profilePhoto: '',
         password: ''
     });
     const [cvFile, setCvFile] = useState(null);
@@ -24,9 +24,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            console.log("p2");
             const response = await userService.profile();
-            console.log("p3");
             setInitialProfile({
                 name: response.name || '',
                 username: response.username || '',
@@ -112,8 +110,6 @@ const Profile = () => {
     const handleSubmit = async(e) => {
         e.preventDefault();
         const updatePayload = prepareUpdatePayload();
-        console.log("HERE111");
-        console.log(updatePayload);
         try {
             const response = await userService.updateUser(updatePayload);
             console.log('Profile updated successfully:', response.data);
@@ -126,7 +122,7 @@ const Profile = () => {
         <div className="bg-white shadow-md rounded-3xl ml-profile pl-8 pr-8 p-6 w-8/12 mt-48">
           <div className="flex items-center">
             <div className="w-1/3 pr-2">
-              <img src={formData.profilPhoto} alt="Profil" className="rounded-lg" onClick={handleProfileImageClick}/>
+              <img src={formData.profilePhoto} alt="Profil" className="rounded-lg" onClick={handleProfileImageClick}/>
               <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
             </div>
             <div className='w-2/3 pl-6'>
@@ -180,7 +176,7 @@ const Profile = () => {
                         CV Link
                       </label>
                       <input className="shadow appearance-none border rounded-xl w-full py-2 px-3 text-afafaf leading-tight focus:outline-none focus:shadow-outline"
-                        id="cvLink" type="file" placeholder="CV Link" name="cvLink" value={formData.cv} onChange={handleFileChange} />
+                        id="cvLink" type="file" placeholder={initialProfile.cvLink ? initialProfile.cvLink : "CV Link"} name="cvLink" value={formData.cv} onChange={handleFileChange} />
                       {/* <input id="cvLink" type="file" class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"/> */}
                     </div>
                   </div>

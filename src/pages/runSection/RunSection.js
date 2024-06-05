@@ -19,7 +19,6 @@ const RunSection = () => {
     // { name: 'learning.csv', size: '1.2 Gb', progress: 65, status: 'error' },
     // { name: 'asasd.arff', size: '950 Mb', progress: 100, status: 'completed' }
   ]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleRunWaiting = () => {
     setIsLoading(true); // Set loading to true when the user clicks the "Run" button

@@ -264,25 +264,6 @@ const getDataset = async(payload) => {
     }
 };
 
-const getDataset = async(payload) => {
-    try {
-        const token = localStorage.getItem('jwtToken');
-        const response = await axios.post(`${MODEL_API_URL}/get-dataset`, payload, {
-            headers: {
-                'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
-                'Content-Type': 'multipart/form-data',
-                'Access-Control-Allow-Origin' : '*'
-            }
-            });
-
-        console.log(response);
-        return response;
-    } catch (error) {
-        console.log(error);
-        throw error;    
-    }
-};
-
 const getModel = async(modelId) => {
     try {
         const token = localStorage.getItem('jwtToken');
