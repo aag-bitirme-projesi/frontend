@@ -110,9 +110,14 @@ const RunSection = () => {
       const response = await ModelService.getDataset(formData);
       const responseBlob = await response.data;
 
+      
+      console.log('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+
       const newFormData = new FormData();
       const datasetFile = new Blob([responseBlob], { type: 'application/octet-stream' });
       newFormData.append('dataset', datasetFile, 'dataset_file_name');
+
+      console.log('HELPPPPPPPPPPPPPPPPPPPPPPPPPPP')
 
       try {
         const datasetResponse = await axios.post(`${CONTAINER_URL}/upload-dataset`, newFormData, {

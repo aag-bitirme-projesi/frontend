@@ -283,5 +283,5 @@ const getModel = async(modelId) => {
 
 const modelService = { decodeToken, getUsernameFromToken, getEmailFromToken, boughtModels, 
     myModels, myDatasets, deleteDatasets, deleteMyModels, allModels, uploadModel, 
-    modelPhoto, uploadDataset, openContainer, closeContainer, getModel };
+    modelPhoto, uploadDataset, openContainer, closeContainer, getModel, getDataset };
 export default modelService;

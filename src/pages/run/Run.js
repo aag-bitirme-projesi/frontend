@@ -45,6 +45,8 @@ const Run = () => {
             'name': 'mobilenet-test'
           }
         );
+        console.log('response', response);
+
         navigate('/runSection', {state: {containerId: response.data.containerId, port: response.data.port}});
       } catch (error) {
         console.error('Docker failed:', error.response ? error.response.data : 'No response');
