@@ -65,6 +65,10 @@ const RunSection = () => {
   const [accuracy, setAccuracy] = useState(0);
   const [loss, setLoss] = useState(0);
 
+  const [batchSize, setBatchSize] = useState(4);
+  const [epochs, setEpochs] = useState(1);
+  const [showParameters, setShowParameters] = useState(false);
+
   const handleBeforeUnload = async (event) => {
     try {
       setIsLoading(true);
@@ -278,8 +282,13 @@ const RunSection = () => {
     }
   };
 
-  const handleMethodChange = async (event) => {
+  const handleParameters = (event) => {
     setSelectedMethod(event.target.value);
+    setShowParameters(true);
+  }
+
+  const handleMethodChange = async (event) => {
+    setShowParameters(false);
     
     try {
       const token = localStorage.getItem('jwtToken');
@@ -300,12 +309,12 @@ const RunSection = () => {
       });
   
       const formData = new FormData();
-      formData.append('batch_size', 16);
-      formData.append('epochs', 10);
+      formData.append('batch_size', batchSize);
+      formData.append('epochs', epochs);
 
-      console.log('selected method:', event.target.value);
+      console.log('selected method:', selectedMethod);
   
-      if (event.target.value === 'finetune') {
+      if (selectedMethod === 'finetune') {
         const finetuneResponse = await axios.post(`${CONTAINER_URL}/finetune`, formData, {
           headers: {
               'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
@@ -313,7 +322,7 @@ const RunSection = () => {
               'Access-Control-Allow-Origin' : '*'
           }
         })
-      } else if (event.target.value === 'train') {
+      } else if (selectedMethod === 'train') {
         const trainingResponse = await axios.post(`${CONTAINER_URL}/train`, formData, {
           headers: {
               'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
@@ -432,7 +441,7 @@ const RunSection = () => {
                           id={model.name}
                           name="method"
                           value={model.name}
-                          onChange={handleMethodChange}
+                          onChange={handleParameters}
                         />
                         <div className="w-6 h-6 bg-transparent border-2 border-purple-500 rounded-full peer-checked:bg-purple-500 peer-checked:border-purple-500 peer-hover:shadow-lg peer-hover:shadow-purple-500/50 peer-checked:shadow-lg peer-checked:shadow-purple-500/50 transition duration-300 ease-in-out"></div>
                         <span className="ml-2 text-white font-thin">{model.name}</span>
@@ -509,7 +518,7 @@ const RunSection = () => {
               <RingLoader color="rgb(179, 0, 255)" size={100} speedMultiplier={1.5}/>
               {showProgress && (
                 <div className='flex flex-col items-center'>
-                  <p className="text-lg font-semibold mt-4">{progressPercentage.toFixed(2)} %</p>
+                  <p className="text-lg font-semibold mt-4">{progressPercentage.toFixed(0)} %</p>
                   <LinearProgress 
                     sx={{
                       width: '250px',
@@ -522,6 +531,40 @@ const RunSection = () => {
                     variant='determinate' value={progressPercentage}/>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {showParameters && (
+          <div className='absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50'>
+            <div className="bg-white p-16 rounded-2xl shadow-lg flex flex-col justify-center items-center">
+              <h2 className='text-lg font-bold mb-4'>Set Parameters</h2>
+              <div className='flex flex-col items-center'>
+                <p className="text-lg font-semibold mt-4">Epochs</p>
+                <input type="number" className='w-24 p-2 text-lg font-semibold mt-2 rounded-lg' value={epochs} onChange={(e) => setEpochs(e.target.value)} />
+              </div>
+              <div className='flex flex-col items-center'>
+                <p className="text-lg font-semibold mt-4">Batch Size</p>
+                <input type='range' className='w-24 p-2 text-lg font-semibold mt-2 rounded-lg' min={2} max={8} value={Math.log2(batchSize)} onChange={(e) => setBatchSize(Math.pow(2, e.target.value))} />
+                {/* <input type="number" className='w-24 p-2 text-lg font-semibold mt-2 rounded-lg' value={batchSize} onChange={(e) => setBatchSize(e.target.value)} /> */}
+              </div>
+              <div className='flex flex-col items-center'>
+                <p className="text-lg font-semibold mt-4">{batchSize}</p>
+              </div>
+              <div className='flex flex-col items-center'>
+                <p className="text-lg font-semibold mt-4">Learning Rate</p>
+                <input type="number" className='w-24 p-2 text-lg font-semibold mt-2 rounded-lg' placeholder='0.001' />
+              </div>
+              <div className='flex flex-col items-center'>
+                <p className="text-lg font-semibold mt-4">Optimizer</p>
+                <select className='w-24 p-2 text-lg font-semibold mt-2 rounded-lg'>
+                  <option value="adam">Adam</option>
+                  <option value="sgd">SGD</option>
+                  <option value="rmsprop">RMSprop</option>
+                  <option value="adagrad">Adagrad</option>
+                </select>
+              </div>
+              <button onClick={handleMethodChange} className="mt-4 px-14 font-extrabold py-2 bg-gradient-to-r from-green-500 to-purple-500 hover:bg-green-400 text-white rounded-xl">Set</button>
             </div>
           </div>
         )}

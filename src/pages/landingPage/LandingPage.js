@@ -66,6 +66,9 @@ const LandingPage = () => {
         }));
 
         setProducts(formattedData);
+
+        console.log('formatte');
+        console.log(formattedData);
       } catch (error) {
         console.log(error);
         setProducts([]);
@@ -84,10 +87,10 @@ const LandingPage = () => {
             <div key={product.id}  onClick={() => handleViewDetails_sales(product.id)}  className="p-4">
               <img className="rounded-lg mb-4" src={product.photo} alt="product" />
               <h5 className="text-lg font-bold text-white mb-2">
-                {product.name.substring(0, 17)}
+                {product.name ? product.name.substring(0, 17) : ''}
               </h5>
               <p className="text-gray-400 text-sm mb-4" >
-                {product.description.substring(0, 50)}...
+                {product.description ? product.description.substring(0, 50) : ''}...
               </p>
             </div>
           ))}
@@ -107,8 +110,8 @@ const LandingPage = () => {
                         <div key={product.id} className="bg-white rounded-xl shadow-2xl p-4 flex flex-col">
                             {/* <img className="rounded-t-lg mb-4" src={product.image} alt="product" /> */}
                             <img className="rounded-lg mb-4" src={product.photo} alt="product" />
-                            <h5 className="text-lg font-bold text-gray-900 mb-2">{product.name.substring(0, 17)}</h5>
-                            <p className="text-gray-700 text-sm mb-4">{product.description.substring(0, 50)}...</p>
+                            <h5 className="text-lg font-bold text-gray-900 mb-2">{product.name ? product.name.substring(0, 17) : ''}</h5>
+                            <p className="text-gray-700 text-sm mb-4">{product.description ? product.description.substring(0, 50) : ''}...</p>
                             <div className="flex w-full items-center">
                             <div data-tooltip={product.price} className="button">
                                 <button className="button-wrapper">
