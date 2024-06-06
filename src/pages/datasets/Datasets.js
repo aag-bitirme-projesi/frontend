@@ -23,10 +23,7 @@ const Dataset = () => {
         console.log('Deleting data IDs:', selectedDataIds);
         const updatedData = data.filter(dataset => !selectedDataIds.includes(dataset.id));
 
-        const formData = new FormData();
-        formData.append('ids', JSON.stringify(selectedDataIds));
-
-        const response = await modelService.deleteDatasets(formData);
+        const response = await modelService.deleteDatasets(selectedDataIds);
         console.log(response)
 
         setData(updatedData);

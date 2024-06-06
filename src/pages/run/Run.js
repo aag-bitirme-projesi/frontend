@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RingLoader } from 'react-spinners';
 
@@ -7,20 +7,35 @@ import ModelService from '../../services/ModelService';
 const Run = () => {
   const navigate = useNavigate();
 
-  const data = {
-    models: [
-      { name: 'data analysis module' },
-      { name: 'historical reporting module' },
-      { name: 'classification module' },
-      { name: 'historical reporting mosafdule' },
-      { name: 'classification modasdfgule' },
-      { name: 'coloring module' }
-    ]
-  };
+  // const data = {
+  //   models: [
+  //     { name: 'data analysis module' },
+  //     { name: 'historical reporting module' },
+  //     { name: 'classification module' },
+  //     { name: 'historical reporting mosafdule' },
+  //     { name: 'classification modasdfgule' },
+  //     { name: 'coloring module' }
+  //   ]
+  // };
 
-  const [selectedModel, setSelectedModel] = useState(data.models[0].name);
+  const [models, setModels] = useState([]);
+  const [selectedModel, setSelectedModel] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        const username = ModelService.getUsernameFromToken(token);
+        await ModelService.boughtModels(setModels);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handlePay = () => {
     navigate(`/pay`);
@@ -39,10 +54,14 @@ const Run = () => {
 
       try {
         setIsLoading(true);
+        console.log('models', models);
+        console.log('selectedModel', selectedModel);
+        var [ _username, _name ] = selectedModel.split('\\');
+
         var response = await ModelService.openContainer(
           {
-            'username': 'ataberk',
-            'name': 'mobilenet-test'
+            'username': _username,
+            'name': _name
           }
         );
         console.log('response', response);
@@ -83,20 +102,20 @@ const Run = () => {
         <div className="flex justify-between bg-bg-mavi p-10 rounded-2xl">
           <div className="w-1/2 space-y-4 ">
             <h2 className="font-bold text-2xl border-b-2 border-slate-600 w-9/12 bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-purple-500 mb-2">Select Models</h2>
-            {data.models.map((model) => (
+            {models.map((model) => (
               <label key={model.name} className="flex text-white items-center space-x-3">
-                <div class="flex flex-col space-y-4">
-                  <label class="relative flex items-center cursor-pointer">
+                <div className="flex flex-col space-y-4">
+                  <label className="relative flex items-center cursor-pointer">
                     <input 
-                      class="sr-only peer" 
+                      className="sr-only peer" 
                       type="radio" 
                       id={model.name}
                       name="model"
                       value={model.name}
                       checked={selectedModel === model.name}
                       onChange={handleModelChange} />
-                    <div class="w-6 h-6 bg-transparent border-2 border-purple-500 rounded-full peer-checked:bg-purple-500 peer-checked:border-purple-500 peer-hover:shadow-lg peer-hover:shadow-purple-500/50 peer-checked:shadow-lg peer-checked:shadow-purple-500/50 transition duration-300 ease-in-out"></div>
-                    <span class="ml-2 text-white font-thin">{model.name}</span>
+                    <div className="w-6 h-6 bg-transparent border-2 border-purple-500 rounded-full peer-checked:bg-purple-500 peer-checked:border-purple-500 peer-hover:shadow-lg peer-hover:shadow-purple-500/50 peer-checked:shadow-lg peer-checked:shadow-purple-500/50 transition duration-300 ease-in-out"></div>
+                    <span className="ml-2 text-white font-thin">{model.name}</span>
                   </label>
                 </div>
               </label>

@@ -63,6 +63,10 @@ const myModels = async(setUpload) => {
         });
 
         const modelData = response.data;
+        console.log("Hellllo")
+        console.log("Hellllo")
+        console.log("Hellllo")
+        console.log("my models: ", modelData);
         // console.log("my models: ", modelData);
         setUpload(modelData);
     } catch (error) {
@@ -113,9 +117,13 @@ const uploadDataset = async(datasetDto) => {   //TODO
 
 const deleteDatasets = async(datasets) => {
     try {
+        
+        const formData = new FormData();
+        formData.append('ids', JSON.stringify(datasets));
+
         console.log(datasets);
         const token = localStorage.getItem('jwtToken');
-        const response = await axios.post(`${MODEL_API_URL}/delete-datasets`, datasets, {
+        const response = await axios.post(`${MODEL_API_URL}/delete-datasets`, formData, {
             headers: {
                 'Authorization': `Bearer ${token}`, //buna gerek yok belki error çıkarır?
                 'Content-Type': 'multipart/form-data'
