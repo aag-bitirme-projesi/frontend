@@ -31,7 +31,11 @@ const Header = () => {
 
     const isHidden = hiddenPaths.some(path => path === location.pathname) || /\/details\/[^/]+$/.test(location.pathname);
 
+    const isHidden1 = hiddenPaths.some(path => path === location.pathname) || /\/details_sales\/[^/]+$/.test(location.pathname);
     if (isHidden) {
+        return null;
+    }
+    if (isHidden1) {
         return null;
     }
 

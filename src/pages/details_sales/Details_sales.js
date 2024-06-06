@@ -2,21 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import AI from "../../assets/pics/ai.png";
 
-const Details = () => {
+const Details_sales = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
     const models = [
-        { id: 1, name: 'data analysis module', description: 'processes and graphs data', date: '01.12.2023', price: '6 $' },
-        { id: 2, name: 'historical reporting module', description: 'You can upload x csvs to this data. It gives you x outputs. These outputs will be very useful to you.', date: '11.02.2024', price: '18 $' },
-        { id: 3, name: 'classification module', description: 'It helps to classify the csvs you upload.', date: '13.02.2024', price: '30 $' },
-        { id: 4, name: 'coloring module', description: 'It is used to color the cells in the csvs you upload.', date: '28.05.2024', price: '32 $' },
-        { id: 5, name: 'data analysis module', description: 'processes and graphs data', date: '01.12.2023', price: '6 $' }
+        { id: 1, name: 'Data Analysis Module', description: 'Processes and graphs data.', date: '01.12.2023', price: '6 $' },
+        { id: 2, name: 'Historical Reporting Module', description: 'You can upload x CSVs to this data. It gives you x outputs. These outputs will be very useful to you.', date: '11.02.2024', price: '18 $' },
+        { id: 3, name: 'Classification Module', description: 'It helps to classify the CSVs you upload.', date: '13.02.2024', price: '30 $' },
+        { id: 4, name: 'Coloring Module', description: 'It is used to color the cells in the CSVs you upload.', date: '28.05.2024', price: '32 $' },
+        { id: 5, name: 'Data Analysis Module', description: 'Processes and graphs data.', date: '01.12.2023', price: '6 $' }
     ];
 
-    const [modelDetails, setModelDetails] = useState({ name: '', description: '', price: '' });
-    const [files, setFiles] = useState([]);  
-    const [images, setImages] = useState([]);
+    const [modelDetails, setModelDetails] = useState({ name: '', description: '', price: '', date: '' });
 
     useEffect(() => {
         const model = models.find(m => m.id.toString() === id);
@@ -28,8 +26,8 @@ const Details = () => {
         }
     }, [id, navigate]);
 
-    const handleCancel = () => {
-        navigate("/models");
+    const handleBack = () => {
+        navigate("/landingPage");
     };
 
     return (
@@ -44,10 +42,13 @@ const Details = () => {
                         <label className="block text-black text-lg font-bold mb-2" htmlFor="name">Project Name</label>
                         <input readOnly className="shadow-lg appearance-none border rounded-xl w-full py-2 px-3 text-slate-600 leading-tight focus:outline-none" id="name" type="text" value={modelDetails.name} />
                     </div>
-                    <div className="w-full mt-6 flex items-center">
+                    <div className="w-full mt-6">
                         <span className="block text-black text-lg font-bold">Price:</span>
-                        <input readOnly className="shadow-lg appearance-none border rounded-xl w-full mr-16 ml-10 p-2 text-slate-600 leading-tight focus:outline-none" value={modelDetails.price} />
-                        <span className="mr-16 font-thin">/sell</span>
+                        <input readOnly className="shadow-lg appearance-none border rounded-xl w-full py-2 px-3 text-slate-600 leading-tight focus:outline-none mt-2" value={modelDetails.price} />
+                    </div>
+                    <div className="w-full mt-6">
+                        <span className="block text-black text-lg font-bold">Release Date:</span>
+                        <input readOnly className="shadow-lg appearance-none border rounded-xl w-full py-2 px-3 text-slate-600 leading-tight focus:outline-none mt-2" value={modelDetails.date} />
                     </div>
                 </div>
                 <div className="w-2/3 items-center mt-4 ml-12">
@@ -58,11 +59,17 @@ const Details = () => {
                 </div>
             </div>
 
-            <div className="text-right">
-                <button onClick={handleCancel} className="px-11 py-2 mr-10 bg-black shadow-lg text-white rounded-xl font-bold">Cancel</button>
+            <div className="flex w-full mt-6">
+                <div className="w-1/2">
+                    <img src={AI} className="rounded-2xl shadow-lg" alt="Artificial Intelligence" style={{ width: '100%', height: 'auto' }} />
+                </div>
             </div>
-        </div>    
+
+            <div className="text-right mt-8">
+                <button onClick={handleBack} className="px-11 py-2 bg-black shadow-lg text-white rounded-xl font-bold">Back</button>
+            </div>
+        </div>
     );
 };
 
-export default Details;
+export default Details_sales;

@@ -14,6 +14,7 @@ import Wallet from './pages/wallet/Wallet';
 import Profile from './pages/profile/Profile';
 import Contact from './pages/contact/Contact';
 import Details from './pages/details/Details';
+import Details_sales from './pages/details_sales/Details_sales';
 import Output from './pages/output/Output';
 import Card from './pages/card/Card';
 import ForgotPassword from './pages/forgotPassword/ForgotPassword';
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/contactUs" element={<ContactEntry />} />
             <Route path="//resetPassword/:token" element={<ChangePassword />} />  {/* baktım */}
             <Route path="/runSection" element={<RunSection />} />
+            <Route path="/details_sales/:id" element={<Details_sales />} />
           </Routes>
         </main>
       </div>

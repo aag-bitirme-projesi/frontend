@@ -92,7 +92,11 @@ code {
   left: 0;
   color: #fff;
 }
-
+.product-image {
+  width: 240px; /* Set the desired width */
+  height: 200px; /* Set the desired height */
+  object-fit: cover; /* Ensure the image covers the container while maintaining aspect ratio */
+}
 .text {
   top: 0;
   font-weight: 700;
