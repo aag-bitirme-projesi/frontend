@@ -74,14 +74,14 @@ const updateUser = async(payload) => {
 
 const deleteAccount = async() => {  //TODO bunu tamamla
   try {
-    const token = localStorage.getItem('jwtToken');
-    const response = await axios.delete(`${API_URL}/delete-account`,  {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      localStorage.removeItem('jwtToken');
+    // const token = localStorage.getItem('jwtToken');
+    // const response = await axios.delete(`${API_URL}/delete-account`,  {
+    //     headers: {
+    //       'Authorization': `Bearer ${token}`,
+    //       'Content-Type': 'application/json'
+    //     }
+    //   });
+    //   localStorage.removeItem('jwtToken');
   } catch (error) {
     console.log(error);
     throw error;

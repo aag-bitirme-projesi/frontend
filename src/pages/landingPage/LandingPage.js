@@ -3,6 +3,7 @@ import PP from "../../assets/pics/profilphoto.png"
 import { useNavigate } from 'react-router-dom';
 import Slider from "react-slick";
 import modelService from '../../services/ModelService';
+import orderService from "../../services/OrderService";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -39,6 +40,15 @@ const LandingPage = () => {
     autoplay: true,
     autoplaySpeed: 2000,
   };
+
+  const handleAddToCart = async(modelId) => {
+    try {
+        const response = await orderService.addToCart(modelId);
+        console.log('Added to cart:', response.data);
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+    }
+};
 
   const handleViewDetails = (modelId) => {
     navigate(`/details/${modelId}`);
@@ -114,7 +124,7 @@ const LandingPage = () => {
                             <p className="text-gray-700 text-sm mb-4">{product.description ? product.description.substring(0, 50) : ''}...</p>
                             <div className="flex w-full items-center">
                             <div data-tooltip={product.price} className="button">
-                                <button className="button-wrapper">
+                                <button className="button-wrapper" onClick={() => handleAddToCart(product.id)}>
                                 <div className="text">Sepete Ekle</div>
                                     <span className="icon">
                                     <svg viewBox="0 0 16 16" className="bi bi-cart2" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
