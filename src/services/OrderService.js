@@ -59,6 +59,9 @@ const removeFromCart = async(modelId) => {
 
 const pay = async(paymentDetails) => {
   try {
+
+    console.log('Payment details:', paymentDetails);
+
     const token = localStorage.getItem('jwtToken');
     const response = await axios.post(`${API_URL}/pay`, paymentDetails, {
       headers: {

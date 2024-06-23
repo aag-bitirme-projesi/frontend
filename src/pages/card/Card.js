@@ -13,11 +13,13 @@ const Card = () => {
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: '',
     cardHolder: '',
-    cvv: '',
-    expMonth: '09',
-    expYear: '2026',
-    cardName: ''
+    cvc: '',
+    expirationMonth: '09',
+    expirationYear: '2026',
+    cardName: 'world'
   });
+  
+
 
   const [orderItems, setOrderItems] = useState([]);
 
@@ -52,13 +54,13 @@ const Card = () => {
 
     try {
       await orderService.pay(paymentDetails);
-      setPaymentStatus('confirmed');
-      navigate('/dashboard');
+      // setPaymentStatus('confirmed');
+      navigate('/landingPage');
     } catch (error) {
       setPaymentStatus('denied');
     } finally {
       setIsLoading(false);
-      navigate('/dashboard');
+      navigate('/landingPage');
     }
   };
 
@@ -164,8 +166,8 @@ const Card = () => {
             </div>
             <div className='w-full flex'>
               <div className="mb-4 w-1/4 text-black">
-                <label className="block font-bold text-white mb-1">CVV</label>
-                <input type="text" value={paymentDetails.cvv} name="cvv" onChange={handleInputChange} className="w-full p-2 border rounded-xl" />
+                <label className="block font-bold text-white mb-1">CVC</label>
+                <input type="text" value={paymentDetails.cvc} name="cvc" onChange={handleInputChange} className="w-full p-2 border rounded-xl" />
               </div>
               <div className="mb-4 w-full flex justify-between ml-10 text-black">
                 <div className="flex flex-col w-1/2">

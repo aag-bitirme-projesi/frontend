@@ -34,7 +34,7 @@ const Signin = () => {
       console.log("hellour");
       console.log(response);
       // navigate('/landingPage')
-      navigate('/dashboard')  //TODO şimdilik, sonra bunu kaldır
+      navigate('/landingPage')  //TODO şimdilik, sonra bunu kaldır
     } catch (error) {
       console.error('Login failed:', error.response ? error.response.data : 'No response');
       alert('Login failed: ' + (error.response ? error.response.data.message : 'No response'));
